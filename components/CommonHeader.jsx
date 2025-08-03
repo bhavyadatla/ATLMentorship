@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Atom, Menu, X, Bell, Search, User, LogOut, Settings } from "lucide-react"
+import { Menu, X } from "lucide-react"
 
 const CommonHeader = ({
   currentPage,
@@ -11,7 +11,6 @@ const CommonHeader = ({
   onLogout,
   currentUser,
   showSidebar = false,
-  showUserMenu = true,
 }) => {
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
@@ -32,7 +31,7 @@ const CommonHeader = ({
   const unreadCount = notifications.filter((n) => n.unread).length
 
   return (
-    <header className="bg-green-100 px-6 py-4">
+    <header className="bg-gradient-to-r from-gradientStart/[40%] via-gradientMid/[70%] to-gradientEnd/[100%] px-6 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Left side - Menu toggle (if sidebar) and Logo */}
         <div className="flex items-center space-x-4">
@@ -48,8 +47,8 @@ const CommonHeader = ({
 
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 text-blue-600">
-              <Atom className="w-8 h-8" />
+            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+              <img src="/images/atl-logo.png" alt="ATL Logo" className="w-6 h-6 rounded-full" />
             </div>
             <span className="text-xl font-bold text-gray-900">ATL Mentorship</span>
           </div>
@@ -58,7 +57,7 @@ const CommonHeader = ({
         {/* Right side - Navigation and User menu */}
         <div className="flex items-center space-x-4">
           {/* Navigation - Only show if not on login/register pages and not in dashboard */}
-          {currentPage !== "login" && currentPage !== "register" && !showSidebar && (
+          {!showSidebar && currentPage !== "login" && currentPage !== "register" && (
             <nav className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <button
@@ -74,110 +73,8 @@ const CommonHeader = ({
             </nav>
           )}
 
-          {/* Dashboard features - Search, Notifications, User menu */}
-          {showUserMenu && currentUser && (
-            <>
-              {/* Search - only in dashboard */}
-              {showSidebar && (
-                <div className="hidden md:flex items-center">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Notifications - only in dashboard */}
-              {showSidebar && (
-                <div className="relative">
-                  <button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 relative"
-                  >
-                    <Bell className="h-5 w-5" />
-                    {unreadCount > 0 && (
-                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
-
-                  {/* Notifications Dropdown */}
-                  {showNotifications && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                      <div className="p-4 border-b border-gray-200">
-                        <h3 className="text-lg font-semibold">Notifications</h3>
-                      </div>
-                      <div className="max-h-64 overflow-y-auto">
-                        {notifications.map((notification) => (
-                          <div
-                            key={notification.id}
-                            className={`p-4 border-b border-gray-100 hover:bg-gray-50 ${
-                              notification.unread ? "bg-blue-50" : ""
-                            }`}
-                          >
-                            <p className="text-sm text-gray-900">{notification.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="p-4">
-                        <button className="text-sm text-blue-600 hover:text-blue-800">View all notifications</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* User Menu */}
-              <div className="relative">
-                <button
-                  onClick={() => setShowUserDropdown(!showUserDropdown)}
-                  className="flex items-center space-x-2 p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <User className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <span className="hidden md:block text-sm font-medium">{currentUser?.name || "User"}</span>
-                </button>
-
-                {/* User Dropdown */}
-                {showUserDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                    <div className="p-4 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">{currentUser?.name || "User"}</p>
-                      <p className="text-xs text-gray-500">{currentUser?.email || "user@example.com"}</p>
-                    </div>
-                    <div className="py-2">
-                      <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <User className="h-4 w-4 mr-2" />
-                        Profile
-                      </button>
-                      <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        <Settings className="h-4 w-4 mr-2" />
-                        Settings
-                      </button>
-                      <hr className="my-2" />
-                      <button
-                        onClick={onLogout}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-
           {/* Login button for non-dashboard pages */}
-          {!showUserMenu && onNavigate && (
+          {!showSidebar && onNavigate && (
             <>
               {currentPage !== "login" && currentPage !== "register" && (
                 <button

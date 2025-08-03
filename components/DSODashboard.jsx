@@ -1,25 +1,24 @@
 "use client"
 
 import { useState } from "react"
-import { User, Home, MapPin, BarChart3, TrendingUp, Users, School, Award, Calendar, ChevronDown } from "lucide-react"
+import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 
 const DSODashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [selectedMandal, setSelectedMandal] = useState("Mandal")
   const [isEditing, setIsEditing] = useState(false)
+  const [selectedMandal, setSelectedMandal] = useState("All Mandals")
   const [editedProfile, setEditedProfile] = useState({
     name: "Dr. Suresh Reddy",
     phone: "+91 98765 43210",
     email: "suresh.reddy@ap.gov.in",
     role: "District Science Officer",
-    district: "Krishna District",
-    experience: "15 years",
   })
 
   // Sample data
   const mandals = [
+    "All Mandals",
     "Machilipatnam",
     "Gudivada",
     "Vijayawada Rural",
@@ -94,33 +93,20 @@ const DSODashboard = ({ currentUser, onLogout }) => {
   }
 
   const getFilteredSchools = () => {
-    if (selectedMandal === "Mandal" || selectedMandal === "All") {
+    if (selectedMandal === "All Mandals") {
       return schoolsData
     }
     return schoolsData.filter((school) => school.mandal === selectedMandal)
   }
 
-  const getStatsData = () => {
-    const filteredSchools = getFilteredSchools()
-    return {
-      totalSchools: filteredSchools.length,
-      activeATL: filteredSchools.filter((s) => s.atlStatus === "Active").length,
-      pendingATL: filteredSchools.filter((s) => s.atlStatus === "Pending").length,
-      totalStudents: filteredSchools.reduce((sum, school) => sum + school.students, 0),
-    }
-  }
-
   const renderContent = () => {
     switch (activeTab) {
       case "home":
-        const stats = getStatsData()
         return (
           <div className="p-6">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">District Science Officer Dashboard</h1>
-              <p className="text-gray-600">
-                {editedProfile.district} - Welcome back, {editedProfile.name}
-              </p>
+              <p className="text-gray-600">Welcome back, {editedProfile.name}</p>
             </div>
 
             {/* Mandal Selector */}
@@ -131,7 +117,6 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                   onChange={(e) => setSelectedMandal(e.target.value)}
                   className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="Mandal">All Mandals</option>
                   {mandals.map((mandal) => (
                     <option key={mandal} value={mandal}>
                       {mandal}
@@ -142,54 +127,15 @@ const DSODashboard = ({ currentUser, onLogout }) => {
               </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Stats Cards - Generic Placeholders */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-blue-100 text-sm">Total Schools</p>
-                    <p className="text-3xl font-bold">{stats.totalSchools}</p>
-                    <p className="text-blue-200 text-xs mt-1">In district</p>
-                  </div>
-                  <School className="h-8 w-8 text-blue-200" />
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-green-100 text-sm">Active ATL</p>
-                    <p className="text-3xl font-bold">{stats.activeATL}</p>
-                    <p className="text-green-200 text-xs mt-1">Operational</p>
-                  </div>
-                  <Award className="h-8 w-8 text-green-200" />
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-yellow-100 text-sm">Pending ATL</p>
-                    <p className="text-3xl font-bold">{stats.pendingATL}</p>
-                    <p className="text-yellow-200 text-xs mt-1">Setup required</p>
-                  </div>
-                  <Calendar className="h-8 w-8 text-yellow-200" />
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-purple-100 text-sm">Total Students</p>
-                    <p className="text-3xl font-bold">{stats.totalStudents}</p>
-                    <p className="text-purple-200 text-xs mt-1">Beneficiaries</p>
-                  </div>
-                  <Users className="h-8 w-8 text-purple-200" />
-                </div>
-              </div>
+              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 1</div>
+              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 2</div>
+              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 3</div>
+              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 4</div>
             </div>
 
-            {/* Analytics Graph Section */}
+            {/* Analytics Graph Section - Large Placeholder */}
             <div className="bg-white rounded-lg shadow p-6 mb-8">
               <h3 className="text-lg font-semibold mb-4 flex items-center">
                 <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
@@ -197,70 +143,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
               </h3>
               <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h4 className="text-2xl font-bold text-gray-700 mb-2">Graph</h4>
-                  <p className="text-gray-500">Performance analytics will be displayed here</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent Activities */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
-                  Recent School Activities
-                </h3>
-                <div className="space-y-4">
-                  {getFilteredSchools()
-                    .slice(0, 3)
-                    .map((school) => (
-                      <div key={school.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">{school.name}</p>
-                          <p className="text-sm text-gray-600">
-                            {school.mandal} - {school.students} students
-                          </p>
-                          <p className="text-xs text-gray-500">Coordinator: {school.coordinator}</p>
-                        </div>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            school.atlStatus === "Active"
-                              ? "bg-green-100 text-green-800"
-                              : school.atlStatus === "Pending"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {school.atlStatus}
-                        </span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-blue-600" />
-                  Mandal Distribution
-                </h3>
-                <div className="space-y-3">
-                  {mandals.slice(0, 4).map((mandal) => {
-                    const mandalSchools = schoolsData.filter((s) => s.mandal === mandal)
-                    const activeCount = mandalSchools.filter((s) => s.atlStatus === "Active").length
-                    return (
-                      <div key={mandal} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-medium text-gray-900">{mandal}</p>
-                          <p className="text-sm text-gray-600">{mandalSchools.length} schools</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-green-600">{activeCount} Active</p>
-                          <p className="text-xs text-gray-500">{mandalSchools.length - activeCount} Others</p>
-                        </div>
-                      </div>
-                    )
-                  })}
+                  <h4 className="text-4xl font-bold text-gray-700 mb-2">Graph</h4>
                 </div>
               </div>
             </div>
@@ -283,14 +166,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                 </div>
                 {!isEditing && (
                   <button onClick={() => setIsEditing(true)} className="ml-auto p-2 text-gray-600 hover:text-gray-900">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
-                    </svg>
+                    <Edit className="w-5 h-5" />
                   </button>
                 )}
               </div>
@@ -389,7 +265,6 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                   onChange={(e) => setSelectedMandal(e.target.value)}
                   className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="Mandal">All Mandals</option>
                   {mandals.map((mandal) => (
                     <option key={mandal} value={mandal}>
                       {mandal}
@@ -512,7 +387,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
             </div>
             {sidebarOpen && (
               <div>
-                <p className="font-medium text-gray-900">Name</p>
+                <p className="font-medium text-gray-900">{editedProfile.name}</p>
                 <p className="text-sm text-gray-500">Dist_Sci Officer</p>
               </div>
             )}
@@ -537,6 +412,16 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                 </button>
               </li>
             ))}
+            {/* Logout Button */}
+            <li>
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
+              >
+                <LogOut className="h-5 w-5 mr-3" />
+                {sidebarOpen && <span>Logout</span>}
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
@@ -550,7 +435,6 @@ const DSODashboard = ({ currentUser, onLogout }) => {
           onLogout={onLogout}
           currentUser={currentUser}
           showSidebar={true}
-          showUserMenu={true}
         />
 
         {/* Main Content Area */}

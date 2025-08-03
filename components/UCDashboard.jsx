@@ -4,16 +4,17 @@ import { useState } from "react"
 import {
   User,
   Home,
-  Users,
   School,
   Award,
   TrendingUp,
   BookOpen,
   Calendar,
-  MapPin,
-  Phone,
-  Mail,
   Edit,
+  LogOut,
+  FileCheck,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
 } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 
@@ -21,6 +22,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
+  const [selectedCollege, setSelectedCollege] = useState("All Colleges") // Moved useState here
 
   const [editedProfile, setEditedProfile] = useState({
     name: "Dr. Rajesh Kumar",
@@ -35,53 +37,127 @@ const UCDashboard = ({ currentUser, onLogout }) => {
   const [colleges, setColleges] = useState([
     {
       id: 1,
-      name: "Government Engineering College",
-      location: "Hyderabad",
-      coordinator: "Dr. Priya Sharma",
-      students: 1200,
-      atlStatus: "Active",
-      phone: "+91 98765 43211",
-      email: "priya.sharma@college.edu.in",
+      sno: 1,
+      clgId: "GCET001",
+      clg: "Government College of Engineering",
+      clgCode: "GCET001",
+      noOfModComp: 8,
+      approval: "Approved",
     },
     {
       id: 2,
-      name: "Institute of Technology",
-      location: "Warangal",
-      coordinator: "Prof. Suresh Reddy",
-      students: 980,
-      atlStatus: "Active",
-      phone: "+91 98765 43212",
-      email: "suresh.reddy@college.edu.in",
+      sno: 2,
+      clgId: "PVIT002",
+      clg: "Private Institute of Technology",
+      clgCode: "PVIT002",
+      noOfModComp: 6,
+      approval: "Pending",
     },
     {
       id: 3,
-      name: "Polytechnic College",
-      location: "Vijayawada",
-      coordinator: "Dr. Lakshmi Devi",
-      students: 750,
-      atlStatus: "Pending",
-      phone: "+91 98765 43213",
-      email: "lakshmi.devi@college.edu.in",
+      sno: 3,
+      clgId: "GOVT003",
+      clg: "Government Polytechnic College",
+      clgCode: "GOVT003",
+      noOfModComp: 10,
+      approval: "Approved",
+    },
+    {
+      id: 4,
+      sno: 4,
+      clgId: "ENGG004",
+      clg: "Engineering College",
+      clgCode: "ENGG004",
+      noOfModComp: 4,
+      approval: "Pending",
+    },
+    {
+      id: 5,
+      sno: 5,
+      clgId: "TECH005",
+      clg: "Technical Institute",
+      clgCode: "TECH005",
+      noOfModComp: 7,
+      approval: "Approved",
+    },
+  ])
+
+  const [pendingApprovals, setPendingApprovals] = useState([
+    {
+      id: 1,
+      type: "New College Registration",
+      applicant: "ABC Engineering College",
+      date: "2024-08-01",
+      priority: "High",
+    },
+    {
+      id: 2,
+      type: "Module Completion Request",
+      applicant: "XYZ Technical Institute",
+      date: "2024-07-30",
+      priority: "Medium",
+    },
+    {
+      id: 3,
+      type: "ATL Setup Approval",
+      applicant: "Government Polytechnic",
+      date: "2024-07-28",
+      priority: "Low",
+    },
+  ])
+
+  const [approvedList, setApprovedList] = useState([
+    {
+      id: 101,
+      type: "College Registration",
+      applicant: "State Engineering College",
+      date: "2024-07-25",
+      approvedBy: "University Coordinator",
+    },
+    {
+      id: 102,
+      type: "Module Completion",
+      applicant: "Technical Institute",
+      date: "2024-07-20",
+      approvedBy: "University Coordinator",
     },
   ])
 
   const sidebarItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "profile", label: "Profile", icon: User },
-    { id: "colleges", label: "College Management", icon: School },
-    { id: "analytics", label: "Analytics", icon: TrendingUp },
+    { id: "approvals", label: "Approvals", icon: FileCheck },
+    { id: "colleges", label: "Colleges list", icon: School },
+    { id: "module-completion", label: "Module completion", icon: BookOpen },
   ]
 
   const handleProfileSave = () => {
     setIsEditing(false)
   }
 
+  const handleApprove = (item) => {
+    setPendingApprovals(pendingApprovals.filter((i) => i.id !== item.id))
+    setApprovedList([
+      ...approvedList,
+      {
+        ...item,
+        id: Date.now(),
+        approvedBy: "University Coordinator",
+        date: new Date().toISOString().slice(0, 10),
+      },
+    ])
+  }
+
+  const handleReject = (item) => {
+    setPendingApprovals(pendingApprovals.filter((i) => i.id !== item.id))
+  }
+
   const getStatsData = () => {
     return {
       totalColleges: colleges.length,
-      activeATL: colleges.filter((c) => c.atlStatus === "Active").length,
-      totalStudents: colleges.reduce((sum, college) => sum + college.students, 0),
-      pendingSetup: colleges.filter((c) => c.atlStatus === "Pending").length,
+      activeATL: colleges.filter((c) => c.approval === "Approved").length,
+      totalStudents: colleges.reduce((sum, college) => sum + (college.students || 0), 0),
+      pendingSetup: colleges.filter((c) => c.approval === "Pending").length,
     }
   }
 
@@ -89,6 +165,14 @@ const UCDashboard = ({ currentUser, onLogout }) => {
     switch (activeTab) {
       case "home":
         const stats = getStatsData()
+
+        const getFilteredColleges = () => {
+          if (selectedCollege === "All Colleges") {
+            return colleges
+          }
+          return colleges.filter((college) => college.clg === selectedCollege)
+        }
+
         return (
           <div className="p-6">
             <div className="mb-8">
@@ -98,13 +182,32 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               </p>
             </div>
 
+            {/* College Dropdown Filter */}
+            <div className="mb-6">
+              <div className="relative inline-block">
+                <select
+                  value={selectedCollege}
+                  onChange={(e) => setSelectedCollege(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  <option value="All Colleges">All Colleges</option>
+                  {colleges.map((college) => (
+                    <option key={college.id} value={college.clg}>
+                      {college.clg}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-blue-100 text-sm">Total Colleges</p>
-                    <p className="text-3xl font-bold">{stats.totalColleges}</p>
+                    <p className="text-3xl font-bold">{getFilteredColleges().length}</p>
                     <p className="text-blue-200 text-xs mt-1">Under university</p>
                   </div>
                   <School className="h-8 w-8 text-blue-200" />
@@ -115,7 +218,9 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-green-100 text-sm">Active ATL</p>
-                    <p className="text-3xl font-bold">{stats.activeATL}</p>
+                    <p className="text-3xl font-bold">
+                      {getFilteredColleges().filter((c) => c.approval === "Approved").length}
+                    </p>
                     <p className="text-green-200 text-xs mt-1">Operational</p>
                   </div>
                   <Award className="h-8 w-8 text-green-200" />
@@ -125,11 +230,11 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-purple-100 text-sm">Total Students</p>
-                    <p className="text-3xl font-bold">{stats.totalStudents}</p>
-                    <p className="text-purple-200 text-xs mt-1">Enrolled</p>
+                    <p className="text-purple-100 text-sm">Pending Approvals</p>
+                    <p className="text-3xl font-bold">{pendingApprovals.length}</p>
+                    <p className="text-purple-200 text-xs mt-1">Requires attention</p>
                   </div>
-                  <Users className="h-8 w-8 text-purple-200" />
+                  <FileCheck className="h-8 w-8 text-purple-200" />
                 </div>
               </div>
 
@@ -137,7 +242,9 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-orange-100 text-sm">Pending Setup</p>
-                    <p className="text-3xl font-bold">{stats.pendingSetup}</p>
+                    <p className="text-3xl font-bold">
+                      {getFilteredColleges().filter((c) => c.approval === "Pending").length}
+                    </p>
                     <p className="text-orange-200 text-xs mt-1">Requires attention</p>
                   </div>
                   <Calendar className="h-8 w-8 text-orange-200" />
@@ -145,72 +252,33 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               </div>
             </div>
 
-            {/* Recent Activities */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
-                  Recent College Activities
-                </h3>
-                <div className="space-y-4">
-                  {colleges.slice(0, 3).map((college) => (
+            {/* Recent Activities - Single Column */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4 flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
+                Recent College Activities
+              </h3>
+              <div className="space-y-4">
+                {getFilteredColleges()
+                  .slice(0, 5)
+                  .map((college) => (
                     <div key={college.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900">{college.name}</p>
-                        <p className="text-sm text-gray-600">
-                          {college.location} - {college.students} students
-                        </p>
-                        <p className="text-xs text-gray-500">Coordinator: {college.coordinator}</p>
+                        <p className="font-medium text-gray-900">{college.clg}</p>
+                        <p className="text-sm text-gray-600">Code: {college.clgCode}</p>
+                        <p className="text-xs text-gray-500">Modules: {college.noOfModComp}</p>
                       </div>
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          college.atlStatus === "Active"
+                          college.approval === "Approved"
                             ? "bg-green-100 text-green-800"
                             : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
-                        {college.atlStatus}
+                        {college.approval}
                       </span>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <BookOpen className="h-5 w-5 mr-2 text-blue-600" />
-                  Performance Overview
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">ATL Setup Progress</span>
-                    <span className="text-sm text-gray-500">
-                      {stats.activeATL}/{stats.totalColleges}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-green-600 h-2 rounded-full"
-                      style={{ width: `${(stats.activeATL / stats.totalColleges) * 100}%` }}
-                    ></div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">Student Engagement</span>
-                    <span className="text-sm text-gray-500">85%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: "85%" }}></div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">Project Completion</span>
-                    <span className="text-sm text-gray-500">78%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: "78%" }}></div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -344,77 +412,135 @@ const UCDashboard = ({ currentUser, onLogout }) => {
           </div>
         )
 
+      case "approvals":
+        return (
+          <div className="p-6 space-y-8">
+            <h2 className="text-2xl font-bold">Approvals</h2>
+
+            {/* Pending List */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Pending list</h3>
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Type</th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Applicant
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Date</th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Priority
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingApprovals.map((item) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.type}</td>
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.applicant}</td>
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.date}</td>
+                          <td className="border border-gray-300 px-4 py-3">
+                            <span
+                              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                item.priority === "High"
+                                  ? "bg-red-100 text-red-800"
+                                  : item.priority === "Medium"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-green-100 text-green-800"
+                              }`}
+                            >
+                              {item.priority}
+                            </span>
+                          </td>
+                          <td className="border border-gray-300 px-4 py-3">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleApprove(item)}
+                                className="p-1 rounded bg-green-100 text-green-600 hover:bg-green-200"
+                                title="Approve"
+                              >
+                                <CheckCircle className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleReject(item)}
+                                className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                                title="Reject"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Approved List */}
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Approved list</h3>
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="bg-gray-200">
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Type</th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Applicant
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Approved Date
+                        </th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Approved By
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {approvedList.map((item) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.type}</td>
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.applicant}</td>
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.date}</td>
+                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.approvedBy}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+
       case "colleges":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">College Management</h2>
+            <h2 className="text-2xl font-bold mb-6">Colleges list</h2>
 
-            {/* Colleges Table */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        College Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Coordinator
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Students
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ATL Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contact
-                      </th>
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">S.No</th>
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg id</th>
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody>
                     {colleges.map((college) => (
                       <tr key={college.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                              <School className="h-5 w-5 text-green-600" />
-                            </div>
-                            <span className="text-sm font-medium text-gray-900">{college.name}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-500">
-                            <MapPin className="h-4 w-4 mr-1" />
-                            {college.location}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{college.coordinator}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{college.students}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span
-                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              college.atlStatus === "Active"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}
-                          >
-                            {college.atlStatus}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div className="flex items-center space-x-2">
-                            <Phone className="h-4 w-4" />
-                            <span>{college.phone}</span>
-                          </div>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Mail className="h-4 w-4" />
-                            <span>{college.email}</span>
-                          </div>
-                        </td>
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.sno}</td>
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clgId}</td>
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clg}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -424,31 +550,49 @@ const UCDashboard = ({ currentUser, onLogout }) => {
           </div>
         )
 
-      case "analytics":
+      case "module-completion":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Analytics</h2>
+            <h2 className="text-2xl font-bold mb-6">Modules completion</h2>
 
-            {/* Analytics Charts Placeholder */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">College Performance</h3>
-                <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">Performance analytics chart</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Student Engagement</h3>
-                <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">Engagement metrics chart</p>
-                  </div>
-                </div>
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                        Clg Code
+                      </th>
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg</th>
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                        No. of mod comp
+                      </th>
+                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                        Approval
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {colleges.map((college) => (
+                      <tr key={college.id} className="hover:bg-gray-50">
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clgCode}</td>
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clg}</td>
+                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.noOfModComp}</td>
+                        <td className="border border-gray-300 px-4 py-3">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              college.approval === "Approved"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}
+                          >
+                            {college.approval}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -471,7 +615,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
             </div>
             {sidebarOpen && (
               <div>
-                <p className="font-medium text-gray-900">{editedProfile.name}</p>
+                <p className="font-medium text-gray-900">Name</p>
                 <p className="text-sm text-gray-500">University Coordinator</p>
               </div>
             )}
@@ -496,6 +640,16 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                 </button>
               </li>
             ))}
+            {/* Logout Button */}
+            <li>
+              <button
+                onClick={onLogout}
+                className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
+              >
+                <LogOut className="h-5 w-5 mr-3" />
+                {sidebarOpen && <span>Logout</span>}
+              </button>
+            </li>
           </ul>
         </nav>
       </div>
@@ -509,7 +663,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
           onLogout={onLogout}
           currentUser={currentUser}
           showSidebar={true}
-          showUserMenu={true}
         />
 
         {/* Main Content Area */}
