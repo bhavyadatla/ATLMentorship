@@ -6,7 +6,6 @@ import {
   Home,
   School,
   Award,
-  TrendingUp,
   BookOpen,
   Calendar,
   Edit,
@@ -17,12 +16,15 @@ import {
   ChevronDown,
 } from "lucide-react"
 import CommonHeader from "./CommonHeader"
+import EditApprovalModal from "./EditApprovalModal" // Import the new modal component
 
 const UCDashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedCollege, setSelectedCollege] = useState("All Colleges") // Moved useState here
+  const [selectedCollege, setSelectedCollege] = useState("All Colleges")
+  const [showEditModal, setShowEditModal] = useState(false) // State for showing edit modal
+  const [editingItem, setEditingItem] = useState(null) // State for the item being edited
 
   const [editedProfile, setEditedProfile] = useState({
     name: "Dr. Rajesh Kumar",
@@ -152,6 +154,32 @@ const UCDashboard = ({ currentUser, onLogout }) => {
     setPendingApprovals(pendingApprovals.filter((i) => i.id !== item.id))
   }
 
+  const handleEditApproved = (item) => {
+    setEditingItem(item)
+    setShowEditModal(true)
+  }
+
+  const handleSaveEditedItem = (updatedItem) => {
+    setApprovedList(approvedList.map((item) => (item.id === updatedItem.id ? updatedItem : item)))
+    setShowEditModal(false)
+    setEditingItem(null)
+  }
+
+  const handleDeclineApproved = (itemToDecline) => {
+    setApprovedList(approvedList.filter((item) => item.id !== itemToDecline.id))
+    setPendingApprovals([
+      ...pendingApprovals,
+      {
+        id: itemToDecline.id, // Keep original ID or generate new if preferred
+        type: itemToDecline.type,
+        applicant: itemToDecline.applicant,
+        date: new Date().toISOString().slice(0, 10), // Set current date for re-pending
+        priority: "Medium", // Assign a default priority
+      },
+    ])
+    alert("Item declined and moved back to pending list.")
+  }
+
   const getStatsData = () => {
     return {
       totalColleges: colleges.length,
@@ -249,36 +277,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                   </div>
                   <Calendar className="h-8 w-8 text-orange-200" />
                 </div>
-              </div>
-            </div>
-
-            {/* Recent Activities - Single Column */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
-                Recent College Activities
-              </h3>
-              <div className="space-y-4">
-                {getFilteredColleges()
-                  .slice(0, 5)
-                  .map((college) => (
-                    <div key={college.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{college.clg}</p>
-                        <p className="text-sm text-gray-600">Code: {college.clgCode}</p>
-                        <p className="text-xs text-gray-500">Modules: {college.noOfModComp}</p>
-                      </div>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          college.approval === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
-                      >
-                        {college.approval}
-                      </span>
-                    </div>
-                  ))}
               </div>
             </div>
           </div>
@@ -501,6 +499,9 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
                           Approved By
                         </th>
+                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -510,6 +511,24 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                           <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.applicant}</td>
                           <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.date}</td>
                           <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.approvedBy}</td>
+                          <td className="border border-gray-300 px-4 py-3">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => handleEditApproved(item)}
+                                className="p-1 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
+                                title="Edit"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeclineApproved(item)}
+                                className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
+                                title="Decline"
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -517,6 +536,13 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                 </div>
               </div>
             </div>
+            {showEditModal && editingItem && (
+              <EditApprovalModal
+                item={editingItem}
+                onSave={handleSaveEditedItem}
+                onClose={() => setShowEditModal(false)}
+              />
+            )}
           </div>
         )
 

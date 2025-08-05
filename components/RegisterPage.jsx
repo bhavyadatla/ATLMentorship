@@ -11,8 +11,9 @@ const RegisterPage = ({ onNavigate }) => {
     name: "",
     email: "",
     phone: "",
-    organization: "",
+    organizationName: "", // Renamed from 'organization'
     district: "",
+    universityName: "", // New field for UC/CC
     password: "",
     confirmPassword: "",
   })
@@ -41,6 +42,32 @@ const RegisterPage = ({ onNavigate }) => {
     "Tirupati",
   ]
 
+  const apUniversities = [
+    "Andhra University",
+    "Sri Venkateswara University",
+    "Acharya Nagarjuna University",
+    "Jawaharlal Nehru Technological University, Kakinada",
+    "Jawaharlal Nehru Technological University, Anantapur",
+    "Rayalaseema University",
+    "Krishna University",
+    "Vikrama Simhapuri University",
+    "Dr. B.R. Ambedkar University, Srikakulam",
+    "Adikavi Nannaya University",
+  ]
+
+  const apColleges = [
+    "Andhra Loyola College",
+    "PB Siddhartha College of Arts & Science",
+    "VR Siddhartha Engineering College",
+    "KL University",
+    "Velagapudi Ramakrishna Siddhartha Engineering College",
+    "Gayatri Vidya Parishad College of Engineering",
+    "GITAM University",
+    "SRM University, AP",
+    "Vignan's Foundation for Science, Technology & Research",
+    "Anil Neerukonda Institute of Technology & Sciences",
+  ]
+
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -51,6 +78,13 @@ const RegisterPage = ({ onNavigate }) => {
   const handleRoleSelect = (role) => {
     setSelectedRole(role.id)
     setIsDropdownOpen(false)
+    // Reset relevant fields when role changes
+    setFormData((prev) => ({
+      ...prev,
+      organizationName: "",
+      district: "",
+      universityName: "",
+    }))
   }
 
   const handleSubmit = (e) => {
@@ -61,8 +95,22 @@ const RegisterPage = ({ onNavigate }) => {
       return
     }
 
-    if (!formData.name || !formData.email || !formData.phone || !formData.district || !formData.organization) {
+    // Basic validation for common fields
+    if (!formData.name || !formData.email || !formData.phone) {
       alert("Please fill in all required fields!")
+      return
+    }
+
+    // Role-specific validation
+    // Removed organizationName validation for SO
+    if (selectedRole === "dso" && (!formData.district || !formData.organizationName)) {
+      alert("Please select your District and enter your District Office name!")
+      return
+    } else if (selectedRole === "uc" && (!formData.district || !formData.universityName)) {
+      alert("Please select your District and University name!")
+      return
+    } else if (selectedRole === "cc" && (!formData.universityName || !formData.organizationName)) {
+      alert("Please select your University name and College name!")
       return
     }
 
@@ -170,51 +218,78 @@ const RegisterPage = ({ onNavigate }) => {
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">District *</label>
-                    <select
-                      value={formData.district}
-                      onChange={(e) => handleInputChange("district", e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    >
-                      <option value="">Select District</option>
-                      {apDistricts.map((district) => (
-                        <option key={district} value={district}>
-                          {district}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {/* District Dropdown for DSO, UC (removed for CC) */}
+                  {(selectedRole === "dso" || selectedRole === "uc") && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">District *</label>
+                      <select
+                        value={formData.district}
+                        onChange={(e) => handleInputChange("district", e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      >
+                        <option value="">Select District</option>
+                        {apDistricts.map((district) => (
+                          <option key={district} value={district}>
+                            {district}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {selectedRole === "dso"
-                        ? "District Office"
-                        : selectedRole === "uc"
-                          ? "University Name"
-                          : selectedRole === "cc"
-                            ? "College Name"
-                            : "State Office"}{" "}
-                      *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.organization}
-                      onChange={(e) => handleInputChange("organization", e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder={`Enter your ${
-                        selectedRole === "dso"
-                          ? "district office"
-                          : selectedRole === "uc"
-                            ? "university"
-                            : selectedRole === "cc"
-                              ? "college"
-                              : "state office"
-                      } name`}
-                      required
-                    />
-                  </div>
+                  {/* University Dropdown for UC, CC */}
+                  {(selectedRole === "uc" || selectedRole === "cc") && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">University Name *</label>
+                      <select
+                        value={formData.universityName}
+                        onChange={(e) => handleInputChange("universityName", e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      >
+                        <option value="">Select University</option>
+                        {apUniversities.map((university) => (
+                          <option key={university} value={university}>
+                            {university}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Organization Name Input/Dropdown for DSO, CC (removed for SO) */}
+                  {(selectedRole === "dso" || selectedRole === "cc") && (
+                    <div className={selectedRole === "so" ? "md:col-span-2" : ""}>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {selectedRole === "dso" ? "District Office Name" : "College Name"} *
+                      </label>
+                      {selectedRole === "cc" ? (
+                        <select
+                          value={formData.organizationName}
+                          onChange={(e) => handleInputChange("organizationName", e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          required
+                        >
+                          <option value="">Select College</option>
+                          {apColleges.map((college) => (
+                            <option key={college} value={college}>
+                              {college}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type="text"
+                          value={formData.organizationName}
+                          onChange={(e) => handleInputChange("organizationName", e.target.value)}
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder={`Enter your district office name`}
+                          required
+                        />
+                      )}
+                    </div>
+                  )}
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Password *</label>
@@ -239,25 +314,6 @@ const RegisterPage = ({ onNavigate }) => {
                       required
                     />
                   </div>
-                </div>
-
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    required
-                  />
-                  <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
-                    I agree to the{" "}
-                    <button type="button" className="text-blue-600 hover:underline">
-                      Terms and Conditions
-                    </button>{" "}
-                    and{" "}
-                    <button type="button" className="text-blue-600 hover:underline">
-                      Privacy Policy
-                    </button>
-                  </label>
                 </div>
 
                 <button
