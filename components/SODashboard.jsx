@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { User, Home, Megaphone, FileCheck, Download, BookOpen, LogOut, Edit } from "lucide-react"
+import { User, Megaphone, FileCheck, Download, BookOpen, LogOut, Edit } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 import SOAnnouncements from "./SOAnnouncements"
 import SOApprovals from "./SOApprovals"
 import SOExportData from "./SOExportData"
 import SOModuleCompletion from "./SOModuleCompletion"
+import Footer from "./Footer"
 
 const SODashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
@@ -24,7 +25,7 @@ const SODashboard = ({ currentUser, onLogout }) => {
   })
 
   const sidebarItems = [
-    { id: "home", label: "Home", icon: Home },
+    { id: "home", label: "Home", icon: User },
     { id: "profile", label: "Profile", icon: User },
     { id: "announcements", label: "Announcements", icon: Megaphone },
     { id: "approvals", label: "Approvals", icon: FileCheck },
@@ -34,6 +35,10 @@ const SODashboard = ({ currentUser, onLogout }) => {
 
   const handleProfileSave = () => {
     setIsEditing(false)
+  }
+
+  const handleNavigate = (tabId) => {
+    setActiveTab(tabId)
   }
 
   const renderContent = () => {
@@ -48,10 +53,12 @@ const SODashboard = ({ currentUser, onLogout }) => {
               </p>
             </div>
 
-            {/* Placeholder for Home content after removing stats */}
-            <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-              <h3 className="text-lg font-semibold mb-4">Welcome to your State Officer Dashboard!</h3>
-              <p>Use the sidebar to navigate through announcements, approvals, data export, and module completion.</p>
+            {/* Simple welcome message only */}
+            <div className="bg-white rounded-lg shadow p-8 text-center">
+              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Welcome to your State Officer Dashboard!</h3>
+              <p className="text-gray-600 text-lg">
+                Use the sidebar navigation to manage announcements, approvals, data exports, and module completion.
+              </p>
             </div>
           </div>
         )
@@ -207,70 +214,77 @@ const SODashboard = ({ currentUser, onLogout }) => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}>
-        {/* User Profile Section */}
-        <div className="p-4 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <User className="h-6 w-6 text-purple-600" />
-            </div>
-            {sidebarOpen && (
-              <div>
-                <p className="font-medium text-gray-900">{editedProfile.name}</p>
-                <p className="text-sm text-gray-500">State Officer</p>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div
+          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
+        >
+          {/* User Profile Section */}
+          <div className="p-4 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-purple-600" />
               </div>
-            )}
+              {sidebarOpen && (
+                <div>
+                  <p className="font-medium text-gray-900">{editedProfile.name}</p>
+                  <p className="text-sm text-gray-500">State Officer</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              {sidebarItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
+                      activeTab === item.id
+                        ? "bg-indigo-50 text-indigo-700 font-medium"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon className="h-5 w-5 mr-3" />
+                    {sidebarOpen && <span>{item.label}</span>}
+                  </button>
+                </li>
+              ))}
+              {/* Logout Button */}
+              <li>
                 <button
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                    activeTab === item.id
-                      ? "bg-indigo-50 text-indigo-700 font-medium"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
+                  onClick={onLogout}
+                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
                 >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {sidebarOpen && <span>{item.label}</span>}
+                  <LogOut className="h-5 w-5 mr-3" />
+                  {sidebarOpen && <span>Logout</span>}
                 </button>
               </li>
-            ))}
-            {/* Logout Button */}
-            <li>
-              <button
-                onClick={onLogout}
-                className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
-              >
-                <LogOut className="h-5 w-5 mr-3" />
-                {sidebarOpen && <span>Logout</span>}
-              </button>
-            </li>
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <CommonHeader
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            onLogout={onLogout}
+            currentUser={currentUser}
+            showSidebar={true}
+          />
+
+          {/* Main Content Area */}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <CommonHeader
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onLogout={onLogout}
-          currentUser={currentUser}
-          showSidebar={true}
-        />
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
-      </div>
+      {/* Footer */}
+      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
     </div>
   )
 }

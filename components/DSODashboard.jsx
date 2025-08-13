@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit } from "lucide-react"
 import CommonHeader from "./CommonHeader"
+import Footer from "./Footer"
 
 const DSODashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
@@ -14,7 +15,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     phone: "+91 98765 43210",
     email: "suresh.reddy@ap.gov.in",
     role: "District Science Officer",
-    district: "Krishna", // Added district field
+    district: "Krishna",
   })
 
   // Sample data
@@ -33,53 +34,107 @@ const DSODashboard = ({ currentUser, onLogout }) => {
   const [schoolsData, setSchoolsData] = useState([
     {
       id: 1,
+      udiseCode: "28230100101",
       name: "Government High School Machilipatnam",
-      mandal: "Machilipatnam",
       type: "Government",
-      students: 450,
-      atlStatus: "Active",
-      coordinator: "Mr. Ravi Kumar",
-      phone: "+91 98765 43211",
+      mandal: "Machilipatnam",
+      village: "Machilipatnam",
+      girls: 220,
+      boys: 230,
+      total: 450,
+      teachers: 18,
+      active: "Yes",
     },
     {
       id: 2,
+      udiseCode: "28230200102",
       name: "Zilla Parishad High School Gudivada",
-      mandal: "Gudivada",
       type: "Government",
-      students: 380,
-      atlStatus: "Active",
-      coordinator: "Ms. Lakshmi Devi",
-      phone: "+91 98765 43212",
+      mandal: "Gudivada",
+      village: "Gudivada",
+      girls: 180,
+      boys: 200,
+      total: 380,
+      teachers: 15,
+      active: "Yes",
     },
     {
       id: 3,
+      udiseCode: "28230300103",
       name: "Municipal High School Vijayawada",
-      mandal: "Vijayawada Urban",
       type: "Municipal",
-      students: 520,
-      atlStatus: "Pending",
-      coordinator: "Dr. Prasad Rao",
-      phone: "+91 98765 43213",
+      mandal: "Vijayawada Urban",
+      village: "Vijayawada",
+      girls: 260,
+      boys: 260,
+      total: 520,
+      teachers: 22,
+      active: "No",
     },
     {
       id: 4,
+      udiseCode: "28230400104",
       name: "Government Girls High School Nandigama",
-      mandal: "Nandigama",
       type: "Government",
-      students: 320,
-      atlStatus: "Active",
-      coordinator: "Mrs. Sunitha Reddy",
-      phone: "+91 98765 43214",
+      mandal: "Nandigama",
+      village: "Nandigama",
+      girls: 320,
+      boys: 0,
+      total: 320,
+      teachers: 14,
+      active: "Yes",
     },
     {
       id: 5,
+      udiseCode: "28230500105",
       name: "Residential School Jaggayyapeta",
-      mandal: "Jaggayyapeta",
       type: "Residential",
-      students: 280,
-      atlStatus: "Inactive",
-      coordinator: "Mr. Venkat Rao",
-      phone: "+91 98765 43215",
+      mandal: "Jaggayyapeta",
+      village: "Jaggayyapeta",
+      girls: 140,
+      boys: 140,
+      total: 280,
+      teachers: 12,
+      active: "Yes",
+    },
+    {
+      id: 6,
+      udiseCode: "28230600106",
+      name: "Government High School Tiruvuru",
+      type: "Government",
+      mandal: "Tiruvuru",
+      village: "Tiruvuru",
+      girls: 195,
+      boys: 205,
+      total: 400,
+      teachers: 16,
+      active: "No",
+    },
+    {
+      id: 7,
+      udiseCode: "28230700107",
+      name: "Zilla Parishad School Pedana",
+      type: "Government",
+      mandal: "Pedana",
+      village: "Pedana",
+      girls: 165,
+      boys: 175,
+      total: 340,
+      teachers: 13,
+      active: "Yes",
+    },
+    {
+      id: 8,
+      udiseCode: "28230800108",
+      name: "Municipal School Vijayawada Rural",
+      type: "Municipal",
+      mandal: "Vijayawada Rural",
+      village: "Kankipadu",
+      girls: 150,
+      boys: 160,
+      total: 310,
+      teachers: 12,
+      active: "Yes",
     },
   ])
 
@@ -93,6 +148,10 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     setIsEditing(false)
   }
 
+  const handleNavigate = (tabId) => {
+    setActiveTab(tabId)
+  }
+
   const getFilteredSchools = () => {
     if (selectedMandal === "All Mandals") {
       return schoolsData
@@ -100,9 +159,20 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     return schoolsData.filter((school) => school.mandal === selectedMandal)
   }
 
+  // Calculate stats for all schools
+  const getAllSchoolsStats = () => {
+    const activeSchools = schoolsData.filter((s) => s.active === "Yes").length
+    const totalStudents = schoolsData.reduce((sum, school) => sum + school.total, 0)
+    const totalTeachers = schoolsData.reduce((sum, school) => sum + school.teachers, 0)
+    const girlsEnrollment = schoolsData.reduce((sum, school) => sum + school.girls, 0)
+
+    return { activeSchools, totalStudents, totalTeachers, girlsEnrollment }
+  }
+
   const renderContent = () => {
     switch (activeTab) {
       case "home":
+        const stats = getAllSchoolsStats()
         return (
           <div className="p-6">
             <div className="mb-8">
@@ -130,12 +200,31 @@ const DSODashboard = ({ currentUser, onLogout }) => {
               </div>
             </div>
 
-            {/* Stats Cards - Generic Placeholders */}
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 1</div>
-              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 2</div>
-              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 3</div>
-              <div className="bg-gray-200 h-24 rounded-lg flex items-center justify-center text-gray-500">Stat 4</div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Active Schools</h3>
+                <p className="text-4xl font-bold text-green-600 mb-1">{stats.activeSchools}</p>
+                <p className="text-sm text-gray-600">Fully operational</p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Total Students</h3>
+                <p className="text-4xl font-bold text-blue-600 mb-1">{stats.totalStudents}</p>
+                <p className="text-sm text-gray-600">Across all schools</p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Total Teachers</h3>
+                <p className="text-4xl font-bold text-purple-600 mb-1">{stats.totalTeachers}</p>
+                <p className="text-sm text-gray-600">Teaching staff</p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Girls Enrollment</h3>
+                <p className="text-4xl font-bold text-pink-600 mb-1">{stats.girlsEnrollment}</p>
+                <p className="text-sm text-gray-600">Female students</p>
+              </div>
             </div>
 
             {/* Analytics Graph Section - Large Placeholder */}
@@ -298,89 +387,74 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        UDISE Code
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         School Name
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Mandal
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Students
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Mandal
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        ATL Status
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Village
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Coordinator
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Girls
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Contact
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Boys
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Teachers
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Active
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {getFilteredSchools().map((school) => (
                       <tr key={school.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {school.udiseCode}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                              <School className="h-5 w-5 text-blue-600" />
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                              <School className="h-4 w-4 text-blue-600" />
                             </div>
                             <span className="text-sm font-medium text-gray-900">{school.name}</span>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{school.mandal}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{school.type}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{school.students}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.type}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.mandal}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.village}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.girls}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.boys}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {school.total}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.teachers}</td>
+                        <td className="px-4 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              school.atlStatus === "Active"
-                                ? "bg-green-100 text-green-800"
-                                : school.atlStatus === "Pending"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-red-100 text-red-800"
+                              school.active === "Yes" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
                             }`}
                           >
-                            {school.atlStatus}
+                            {school.active}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{school.coordinator}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{school.phone}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-            {/* Summary Cards */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2">Active ATL Schools</h3>
-                <p className="text-3xl font-bold text-green-600">
-                  {getFilteredSchools().filter((s) => s.atlStatus === "Active").length}
-                </p>
-                <p className="text-sm text-gray-600">Fully operational</p>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2">Pending Setup</h3>
-                <p className="text-3xl font-bold text-yellow-600">
-                  {getFilteredSchools().filter((s) => s.atlStatus === "Pending").length}
-                </p>
-                <p className="text-sm text-gray-600">Requires attention</p>
-              </div>
-
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2">Total Students</h3>
-                <p className="text-3xl font-bold text-blue-600">
-                  {getFilteredSchools().reduce((sum, school) => sum + school.students, 0)}
-                </p>
-                <p className="text-sm text-gray-600">Across all schools</p>
               </div>
             </div>
           </div>
@@ -392,70 +466,77 @@ const DSODashboard = ({ currentUser, onLogout }) => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}>
-        {/* User Profile Section */}
-        <div className="p-4 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-              <User className="h-6 w-6 text-purple-600" />
-            </div>
-            {sidebarOpen && (
-              <div>
-                <p className="font-medium text-gray-900">{editedProfile.name}</p>
-                <p className="text-sm text-gray-500">Dist_Sci Officer</p>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div
+          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
+        >
+          {/* User Profile Section */}
+          <div className="p-4 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-purple-600" />
               </div>
-            )}
+              {sidebarOpen && (
+                <div>
+                  <p className="font-medium text-gray-900">{editedProfile.name}</p>
+                  <p className="text-sm text-gray-500">Dist_Sci Officer</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              {sidebarItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
+                      activeTab === item.id
+                        ? "bg-gray-100 text-gray-900 font-medium"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon className="h-5 w-5 mr-3" />
+                    {sidebarOpen && <span>{item.label}</span>}
+                  </button>
+                </li>
+              ))}
+              {/* Logout Button */}
+              <li>
                 <button
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                    activeTab === item.id
-                      ? "bg-gray-100 text-gray-900 font-medium"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
+                  onClick={onLogout}
+                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
                 >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {sidebarOpen && <span>{item.label}</span>}
+                  <LogOut className="h-5 w-5 mr-3" />
+                  {sidebarOpen && <span>Logout</span>}
                 </button>
               </li>
-            ))}
-            {/* Logout Button */}
-            <li>
-              <button
-                onClick={onLogout}
-                className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
-              >
-                <LogOut className="h-5 w-5 mr-3" />
-                {sidebarOpen && <span>Logout</span>}
-              </button>
-            </li>
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <CommonHeader
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            onLogout={onLogout}
+            currentUser={currentUser}
+            showSidebar={true}
+          />
+
+          {/* Main Content Area */}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <CommonHeader
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onLogout={onLogout}
-          currentUser={currentUser}
-          showSidebar={true}
-        />
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
-      </div>
+      {/* Footer */}
+      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
     </div>
   )
 }

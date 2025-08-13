@@ -1,46 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
+import Footer from "@/components/Footer"
 
 const AboutPage = ({ onNavigate }) => {
-  const [expandedFaq, setExpandedFaq] = useState(null)
-
-  const faqs = [
-    {
-      id: 1,
-      question: "What are Atal Tinkering Labs (ATLs) and how do they support the mission?",
-      answer:
-        "Atal Tinkering Labs are dedicated innovation workspaces where students can give shape to their ideas through hands-on do-it-yourself mode and learn innovation skills. They are equipped with state-of-the-art equipment including 3D printers, robotics kits, IoT devices, sensors and other cutting-edge technology to foster creativity and innovation among students from Class VI to XII.",
-    },
-    {
-      id: 2,
-      question: "How do engineering colleges and their students contribute to this initiative?",
-      answer:
-        "Engineering colleges provide mentorship, technical expertise, and resources to support ATL students in their innovation journey. College students and faculty members serve as mentors, guiding school students through project development, technical problem-solving, and innovation methodologies.",
-    },
-    {
-      id: 3,
-      question: "What are Atal Tinkering Labs (ATLs) and how do they support the mission?",
-      answer:
-        "ATLs serve as innovation hubs that foster creativity, critical thinking, and problem-solving skills among students. They provide a platform for students to work on real-world problems and develop innovative solutions using modern technology and tools.",
-    },
-    {
-      id: 4,
-      question: "How do engineering colleges and their students contribute to this initiative?",
-      answer:
-        "They contribute through mentorship programs, project guidance, technical workshops, and sharing knowledge with ATL students. This creates a bridge between theoretical learning and practical application, benefiting both school and college students.",
-    },
-  ]
-
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
       <CommonHeader currentPage="about" onNavigate={onNavigate} showSidebar={false} showUserMenu={false} />
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 py-12 space-y-16">
+      <main className="max-w-6xl mx-auto px-6 py-12 space-y-16 flex-1">
         {/* About ATL Mentorship Section */}
         <section className="bg-white">
           <div className="py-12">
@@ -67,7 +37,13 @@ const AboutPage = ({ onNavigate }) => {
               </div>
 
               {/* Image Placeholder */}
-              <div className="w-full h-80 bg-gray-300 rounded-lg"></div>
+              <div className="w-full h-80 bg-gray-300 rounded-lg flex items-center justify-center">
+                <img
+                  src="/images/about-description.png"
+                  alt="About ATL Description"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -78,7 +54,13 @@ const AboutPage = ({ onNavigate }) => {
             <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">Vision & Mission</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               {/* Image Placeholder */}
-              <div className="w-full h-80 bg-gray-300 rounded-lg"></div>
+              <div className="w-full h-80 bg-gray-300 rounded-lg flex items-center justify-center">
+                <img
+                  src="/images/about-vision.png"
+                  alt="Vision & Mission"
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
 
               {/* Content */}
               <div className="space-y-6">
@@ -121,38 +103,10 @@ const AboutPage = ({ onNavigate }) => {
             </div>
           </div>
         </section>
-
-        {/* FAQ Section */}
-        <section className="bg-white">
-          <div className="py-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-12">FAQ's</h2>
-            <div className="space-y-1">
-              {faqs.map((faq, index) => (
-                <div key={faq.id} className="border-b border-gray-300">
-                  <button
-                    onClick={() => setExpandedFaq(expandedFaq === faq.id ? null : faq.id)}
-                    className="w-full flex items-center justify-between py-6 text-left hover:bg-gray-50 px-2"
-                  >
-                    <span className="text-lg font-medium text-gray-900 pr-4">
-                      {index + 1}. {faq.question}
-                    </span>
-                    {expandedFaq === faq.id ? (
-                      <ChevronUp className="w-6 h-6 text-gray-500 flex-shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6 text-gray-500 flex-shrink-0" />
-                    )}
-                  </button>
-                  {expandedFaq === faq.id && (
-                    <div className="px-2 pb-6">
-                      <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
       </main>
+
+      {/* Footer */}
+      <Footer onNavigate={onNavigate} isLoggedIn={false} />
     </div>
   )
 }

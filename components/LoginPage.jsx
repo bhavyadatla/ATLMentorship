@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import CommonHeader from "@/components/CommonHeader"
+import Footer from "@/components/Footer"
 
 const LoginPage = ({ onLogin, onNavigate }) => {
   const [username, setUsername] = useState("")
@@ -44,12 +45,12 @@ const LoginPage = ({ onLogin, onNavigate }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
       <CommonHeader currentPage="login" onNavigate={onNavigate} showSidebar={false} showUserMenu={false} />
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-6 py-16 flex-1">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           {/* Login Form */}
           <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200">
@@ -148,6 +149,9 @@ const LoginPage = ({ onLogin, onNavigate }) => {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer onNavigate={onNavigate} isLoggedIn={false} />
     </div>
   )
 }

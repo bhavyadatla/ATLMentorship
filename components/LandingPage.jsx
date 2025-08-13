@@ -2,15 +2,16 @@
 
 import { Users, Target, BookOpen } from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
+import Footer from "@/components/Footer"
 
 const LandingPage = ({ onLogin, onNavigate }) => {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
       <CommonHeader currentPage="home" onNavigate={onNavigate} showSidebar={false} showUserMenu={false} />
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 py-16">
+      <main className="max-w-6xl mx-auto px-6 py-16 flex-1">
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-8">What is ATL Mentorship?</h1>
@@ -58,6 +59,9 @@ const LandingPage = ({ onLogin, onNavigate }) => {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer onNavigate={onNavigate} isLoggedIn={false} />
     </div>
   )
 }

@@ -3,69 +3,89 @@
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
+import Footer from "@/components/Footer"
 
 const RegisterPage = ({ onNavigate }) => {
   const [selectedRole, setSelectedRole] = useState("")
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phone: "",
-    organizationName: "", // Renamed from 'organization'
+    universityName: "",
+    collegeName: "",
     district: "",
-    universityName: "", // New field for UC/CC
     password: "",
     confirmPassword: "",
   })
 
   const roleOptions = [
-    { id: "dso", title: "District Science Officer", shortTitle: "DSO" },
+    { id: "so", title: "State Officer", shortTitle: "SO" },
     { id: "uc", title: "University Coordinator", shortTitle: "UC" },
     { id: "cc", title: "College Coordinator", shortTitle: "CC" },
-    { id: "so", title: "State Officer", shortTitle: "SO" },
+    { id: "dso", title: "District Science Officer", shortTitle: "DSO" },
   ]
 
   const apDistricts = [
-    "Anantapur",
-    "Chittoor",
-    "East Godavari",
-    "Guntur",
-    "Krishna",
-    "Kurnool",
-    "Nellore",
-    "Prakasam",
-    "Srikakulam",
-    "Visakhapatnam",
-    "Vizianagaram",
-    "West Godavari",
-    "Kadapa",
-    "Tirupati",
+    "Adilabad",
+    "Bhadradri Kothagudem",
+    "Hyderabad",
+    "Jagtial",
+    "Jangaon",
+    "Jayashankar Bhupalpally",
+    "Jogulamba Gadwal",
+    "Kamareddy",
+    "Karimnagar",
+    "Khammam",
+    "Komaram Bheem Asifabad",
+    "Mahabubabad",
+    "Mahabubnagar",
+    "Mancherial",
+    "Medak",
+    "Medchal Malkajgiri",
+    "Mulugu",
+    "Nagarkurnool",
+    "Nalgonda",
+    "Narayanpet",
+    "Nirmal",
+    "Nizamabad",
+    "Peddapalli",
+    "Rajanna Sircilla",
+    "Rangareddy",
+    "Sangareddy",
+    "Siddipet",
+    "Suryapet",
+    "Vikarabad",
+    "Wanaparthy",
+    "Warangal Rural",
+    "Warangal Urban",
+    "Yadadri Bhuvanagiri",
   ]
 
   const apUniversities = [
+    "JNTU Hyderabad",
+    "JNTU Kakinada",
+    "JNTU Anantapur",
     "Andhra University",
     "Sri Venkateswara University",
+    "Osmania University",
+    "Kakatiya University",
+    "Telangana University",
     "Acharya Nagarjuna University",
-    "Jawaharlal Nehru Technological University, Kakinada",
-    "Jawaharlal Nehru Technological University, Anantapur",
     "Rayalaseema University",
-    "Krishna University",
-    "Vikrama Simhapuri University",
-    "Dr. B.R. Ambedkar University, Srikakulam",
-    "Adikavi Nannaya University",
   ]
 
   const apColleges = [
+    "Government College of Engineering",
+    "Jawaharlal Nehru Technological University",
+    "Chaitanya Bharathi Institute of Technology",
+    "Vasavi College of Engineering",
+    "VNR Vignana Jyothi Institute of Engineering",
+    "Gokaraju Rangaraju Institute of Engineering",
+    "Institute of Aeronautical Engineering",
+    "CMR College of Engineering & Technology",
     "Andhra Loyola College",
     "PB Siddhartha College of Arts & Science",
-    "VR Siddhartha Engineering College",
-    "KL University",
-    "Velagapudi Ramakrishna Siddhartha Engineering College",
-    "Gayatri Vidya Parishad College of Engineering",
-    "GITAM University",
-    "SRM University, AP",
-    "Vignan's Foundation for Science, Technology & Research",
-    "Anil Neerukonda Institute of Technology & Sciences",
   ]
 
   const handleInputChange = (field, value) => {
@@ -81,10 +101,25 @@ const RegisterPage = ({ onNavigate }) => {
     // Reset relevant fields when role changes
     setFormData((prev) => ({
       ...prev,
-      organizationName: "",
-      district: "",
       universityName: "",
+      collegeName: "",
+      district: "",
     }))
+  }
+
+  const getRoleDisplayName = () => {
+    switch (selectedRole) {
+      case "so":
+        return "State Officer"
+      case "uc":
+        return "BCDE University Coordinator"
+      case "cc":
+        return "BCDE College Coordinator"
+      case "dso":
+        return "District Science Officer"
+      default:
+        return ""
+    }
   }
 
   const handleSubmit = (e) => {
@@ -96,20 +131,19 @@ const RegisterPage = ({ onNavigate }) => {
     }
 
     // Basic validation for common fields
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.fullName || !formData.email || !formData.phone) {
       alert("Please fill in all required fields!")
       return
     }
 
     // Role-specific validation
-    // Removed organizationName validation for SO
-    if (selectedRole === "dso" && (!formData.district || !formData.organizationName)) {
-      alert("Please select your District and enter your District Office name!")
+    if (selectedRole === "dso" && !formData.district) {
+      alert("Please select your District!")
       return
-    } else if (selectedRole === "uc" && (!formData.district || !formData.universityName)) {
-      alert("Please select your District and University name!")
+    } else if (selectedRole === "uc" && !formData.universityName) {
+      alert("Please select your University name!")
       return
-    } else if (selectedRole === "cc" && (!formData.universityName || !formData.organizationName)) {
+    } else if (selectedRole === "cc" && (!formData.universityName || !formData.collegeName)) {
       alert("Please select your University name and College name!")
       return
     }
@@ -132,19 +166,28 @@ const RegisterPage = ({ onNavigate }) => {
   const selectedRoleData = roleOptions.find((r) => r.id === selectedRole)
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
       <CommonHeader currentPage="register" onNavigate={onNavigate} showSidebar={false} showUserMenu={false} />
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto px-6 py-16">
+      <main className="max-w-2xl mx-auto px-6 py-12 flex-1">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Create Your Account</h1>
+          {/* Header Section */}
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <img src="/images/atl-logo.png" alt="ATL Logo" className="w-6 h-6 rounded-full" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h1>
+            <p className="text-gray-600">Join the ATL Mentorship Platform</p>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* User Type Dropdown */}
             <div>
-              <label className="block text-lg font-semibold text-gray-900 mb-3">User Type</label>
+              <label className="block text-lg font-semibold text-gray-900 mb-3">User Type *</label>
               <div className="relative">
                 <button
                   type="button"
@@ -182,20 +225,24 @@ const RegisterPage = ({ onNavigate }) => {
             {selectedRole && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Full Name */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                     <input
                       type="text"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      value={formData.fullName}
+                      onChange={(e) => handleInputChange("fullName", e.target.value)}
                       className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="Enter your full name"
                       required
                     />
                   </div>
 
+                  {/* Email */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {selectedRole === "cc" ? "Email Address *" : "Email *"}
+                    </label>
                     <input
                       type="email"
                       value={formData.email}
@@ -206,6 +253,7 @@ const RegisterPage = ({ onNavigate }) => {
                     />
                   </div>
 
+                  {/* Phone Number */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                     <input
@@ -218,27 +266,7 @@ const RegisterPage = ({ onNavigate }) => {
                     />
                   </div>
 
-                  {/* District Dropdown for DSO, UC (removed for CC) */}
-                  {(selectedRole === "dso" || selectedRole === "uc") && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">District *</label>
-                      <select
-                        value={formData.district}
-                        onChange={(e) => handleInputChange("district", e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        required
-                      >
-                        <option value="">Select District</option>
-                        {apDistricts.map((district) => (
-                          <option key={district} value={district}>
-                            {district}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-
-                  {/* University Dropdown for UC, CC */}
+                  {/* University Name - for UC and CC */}
                   {(selectedRole === "uc" || selectedRole === "cc") && (
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">University Name *</label>
@@ -258,39 +286,55 @@ const RegisterPage = ({ onNavigate }) => {
                     </div>
                   )}
 
-                  {/* Organization Name Input/Dropdown for DSO, CC (removed for SO) */}
-                  {(selectedRole === "dso" || selectedRole === "cc") && (
-                    <div className={selectedRole === "so" ? "md:col-span-2" : ""}>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {selectedRole === "dso" ? "District Office Name" : "College Name"} *
-                      </label>
-                      {selectedRole === "cc" ? (
-                        <select
-                          value={formData.organizationName}
-                          onChange={(e) => handleInputChange("organizationName", e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          required
-                        >
-                          <option value="">Select College</option>
-                          {apColleges.map((college) => (
-                            <option key={college} value={college}>
-                              {college}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          value={formData.organizationName}
-                          onChange={(e) => handleInputChange("organizationName", e.target.value)}
-                          className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          placeholder={`Enter your district office name`}
-                          required
-                        />
-                      )}
+                  {/* College Name - for CC only */}
+                  {selectedRole === "cc" && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">College Name *</label>
+                      <select
+                        value={formData.collegeName}
+                        onChange={(e) => handleInputChange("collegeName", e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      >
+                        <option value="">Select College</option>
+                        {apColleges.map((college) => (
+                          <option key={college} value={college}>
+                            {college}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
 
+                  {/* District - for DSO only */}
+                  {selectedRole === "dso" && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">District *</label>
+                      <select
+                        value={formData.district}
+                        onChange={(e) => handleInputChange("district", e.target.value)}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        required
+                      >
+                        <option value="">Select District</option>
+                        {apDistricts.map((district) => (
+                          <option key={district} value={district}>
+                            {district}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Role Display */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                    <div className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
+                      {getRoleDisplayName()}
+                    </div>
+                  </div>
+
+                  {/* Password */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Password *</label>
                     <input
@@ -303,6 +347,7 @@ const RegisterPage = ({ onNavigate }) => {
                     />
                   </div>
 
+                  {/* Confirm Password */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Confirm Password *</label>
                     <input
@@ -316,9 +361,10 @@ const RegisterPage = ({ onNavigate }) => {
                   </div>
                 </div>
 
+                {/* Submit Button - Exact match to the image theme */}
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-[1.01]"
                 >
                   Create Account
                 </button>
@@ -326,14 +372,23 @@ const RegisterPage = ({ onNavigate }) => {
             )}
           </form>
 
-          <p className="text-center text-gray-600 mt-6">
-            Already have an account?{" "}
-            <button onClick={() => onNavigate("login")} className="text-blue-600 hover:underline font-medium">
-              Sign in
-            </button>
-          </p>
+          {/* Login Link - Matching the theme from image */}
+          <div className="mt-6 text-center">
+            <p className="text-gray-600">
+              Already have an account?{" "}
+              <button
+                onClick={() => onNavigate("login")}
+                className="text-blue-600 hover:text-blue-700 font-medium transition-colors hover:underline"
+              >
+                Sign in
+              </button>
+            </p>
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <Footer onNavigate={onNavigate} isLoggedIn={false} />
     </div>
   )
 }

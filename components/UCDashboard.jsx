@@ -1,281 +1,294 @@
 "use client"
 
 import { useState } from "react"
-import {
-  User,
-  Home,
-  School,
-  Award,
-  BookOpen,
-  Calendar,
-  Edit,
-  LogOut,
-  FileCheck,
-  CheckCircle,
-  XCircle,
-  ChevronDown,
-} from "lucide-react"
+import { User, Home, Users, FileText, Download, School, LogOut, Edit } from "lucide-react"
 import CommonHeader from "./CommonHeader"
-import EditApprovalModal from "./EditApprovalModal" // Import the new modal component
+import Footer from "./Footer"
+import EditApprovalModal from "./EditApprovalModal"
 
 const UCDashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
-  const [selectedCollege, setSelectedCollege] = useState("All Colleges")
-  const [showEditModal, setShowEditModal] = useState(false) // State for showing edit modal
-  const [editingItem, setEditingItem] = useState(null) // State for the item being edited
-
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false)
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [editedProfile, setEditedProfile] = useState({
-    name: "Dr. Rajesh Kumar",
+    name: "Dr. Priya Sharma",
     phone: "+91 98765 43210",
-    email: "rajesh.kumar@university.edu.in",
+    email: "priya.sharma@university.edu.in",
     role: "University Coordinator",
-    university: "State Technical University",
-    department: "Engineering & Technology",
-    experience: "12 years",
+    university: "Andhra University",
   })
 
-  const [colleges, setColleges] = useState([
+  // Sample data for colleges
+  const [collegesData, setCollegesData] = useState([
     {
       id: 1,
       sno: 1,
-      clgId: "GCET001",
-      clg: "Government College of Engineering",
-      clgCode: "GCET001",
-      noOfModComp: 8,
-      approval: "Approved",
+      college: "Government Engineering College",
+      district: "Visakhapatnam",
+      mandal: "Visakhapatnam Urban",
+      village: "Visakhapatnam",
+      mentor: "Dr. Rajesh Kumar",
+      teamsActive: 8,
     },
     {
       id: 2,
       sno: 2,
-      clgId: "PVIT002",
-      clg: "Private Institute of Technology",
-      clgCode: "PVIT002",
-      noOfModComp: 6,
-      approval: "Pending",
+      college: "Andhra University College of Engineering",
+      district: "Visakhapatnam",
+      mandal: "Visakhapatnam Urban",
+      village: "Visakhapatnam",
+      mentor: "Prof. Sunita Rao",
+      teamsActive: 12,
     },
     {
       id: 3,
       sno: 3,
-      clgId: "GOVT003",
-      clg: "Government Polytechnic College",
-      clgCode: "GOVT003",
-      noOfModComp: 10,
-      approval: "Approved",
+      college: "GITAM University",
+      district: "Visakhapatnam",
+      mandal: "Bheemunipatnam",
+      village: "Rushikonda",
+      mentor: "Dr. Anil Reddy",
+      teamsActive: 15,
     },
     {
       id: 4,
       sno: 4,
-      clgId: "ENGG004",
-      clg: "Engineering College",
-      clgCode: "ENGG004",
-      noOfModComp: 4,
-      approval: "Pending",
+      college: "Vignan's Institute of Technology",
+      district: "Visakhapatnam",
+      mandal: "Duvvada",
+      village: "Duvvada",
+      mentor: "Dr. Kavitha Singh",
+      teamsActive: 6,
     },
     {
       id: 5,
       sno: 5,
-      clgId: "TECH005",
-      clg: "Technical Institute",
-      clgCode: "TECH005",
-      noOfModComp: 7,
-      approval: "Approved",
+      college: "Centurion University",
+      district: "Vizianagaram",
+      mandal: "Vizianagaram",
+      village: "Vizianagaram",
+      mentor: "Prof. Ramesh Babu",
+      teamsActive: 9,
     },
   ])
 
-  const [pendingApprovals, setPendingApprovals] = useState([
+  // Sample data for module completion
+  const [moduleCompletionData, setModuleCompletionData] = useState([
     {
       id: 1,
-      type: "New College Registration",
-      applicant: "ABC Engineering College",
-      date: "2024-08-01",
-      priority: "High",
+      collegeName: "Government Engineering College",
+      teamId: "TEAM001",
+      modulesTotal: 10,
+      modulesCompleted: 8,
+      status: "pending",
     },
     {
       id: 2,
-      type: "Module Completion Request",
-      applicant: "XYZ Technical Institute",
-      date: "2024-07-30",
-      priority: "Medium",
+      collegeName: "Andhra University College of Engineering",
+      teamId: "TEAM002",
+      modulesTotal: 12,
+      modulesCompleted: 12,
+      status: "approved",
     },
     {
       id: 3,
-      type: "ATL Setup Approval",
-      applicant: "Government Polytechnic",
-      date: "2024-07-28",
-      priority: "Low",
+      collegeName: "GITAM University",
+      teamId: "TEAM003",
+      modulesTotal: 8,
+      modulesCompleted: 6,
+      status: "pending",
+    },
+    {
+      id: 4,
+      collegeName: "Vignan's Institute of Technology",
+      teamId: "TEAM004",
+      modulesTotal: 10,
+      modulesCompleted: 10,
+      status: "approved",
+    },
+    {
+      id: 5,
+      collegeName: "Centurion University",
+      teamId: "TEAM005",
+      modulesTotal: 9,
+      modulesCompleted: 4,
+      status: "pending",
     },
   ])
 
-  const [approvedList, setApprovedList] = useState([
+  // Sample data for approvals
+  const [pendingApprovals, setPendingApprovals] = useState([
     {
-      id: 101,
-      type: "College Registration",
-      applicant: "State Engineering College",
-      date: "2024-07-25",
-      approvedBy: "University Coordinator",
+      id: 1,
+      type: "Certificate Request",
+      applicant: "Government Engineering College - TEAM001",
+      date: "2024-01-15",
+      details: "Module completion certificate for Innovation Lab",
     },
     {
-      id: 102,
-      type: "Module Completion",
-      applicant: "Technical Institute",
-      date: "2024-07-20",
-      approvedBy: "University Coordinator",
+      id: 2,
+      type: "Resource Request",
+      applicant: "GITAM University - TEAM003",
+      date: "2024-01-14",
+      details: "Additional lab equipment for robotics project",
+    },
+    {
+      id: 3,
+      type: "Event Approval",
+      applicant: "Centurion University - TEAM005",
+      date: "2024-01-13",
+      details: "Science exhibition and innovation showcase",
+    },
+  ])
+
+  const [approvedItems, setApprovedItems] = useState([
+    {
+      id: 4,
+      type: "Certificate Request",
+      applicant: "Andhra University College - TEAM002",
+      approvedDate: "2024-01-10",
+      approvedBy: "Dr. Priya Sharma",
+      details: "Module completion certificate approved",
+    },
+    {
+      id: 5,
+      type: "Resource Request",
+      applicant: "Vignan's Institute - TEAM004",
+      approvedDate: "2024-01-08",
+      approvedBy: "Dr. Priya Sharma",
+      details: "Lab equipment request approved",
     },
   ])
 
   const sidebarItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "profile", label: "Profile", icon: User },
-    { id: "approvals", label: "Approvals", icon: FileCheck },
-    { id: "colleges", label: "Colleges list", icon: School },
-    { id: "module-completion", label: "Module completion", icon: BookOpen },
+    { id: "colleges", label: "Colleges List", icon: School },
+    { id: "module-completion", label: "Module Completion", icon: FileText },
+    { id: "approvals", label: "Approvals", icon: Users },
+    { id: "export-data", label: "Export Data", icon: Download },
   ]
 
   const handleProfileSave = () => {
     setIsEditing(false)
   }
 
-  const handleApprove = (item) => {
-    setPendingApprovals(pendingApprovals.filter((i) => i.id !== item.id))
-    setApprovedList([
-      ...approvedList,
-      {
-        ...item,
-        id: Date.now(),
-        approvedBy: "University Coordinator",
-        date: new Date().toISOString().slice(0, 10),
-      },
-    ])
+  const handleNavigate = (tabId) => {
+    setActiveTab(tabId)
   }
 
-  const handleReject = (item) => {
-    setPendingApprovals(pendingApprovals.filter((i) => i.id !== item.id))
+  const handleApprove = (item, type = "approval") => {
+    setSelectedItem({ ...item, type })
+    setShowConfirmDialog(true)
   }
 
-  const handleEditApproved = (item) => {
-    setEditingItem(item)
+  const confirmApproval = () => {
+    if (selectedItem.type === "module") {
+      setModuleCompletionData((prev) =>
+        prev.map((item) => (item.id === selectedItem.id ? { ...item, status: "approved" } : item)),
+      )
+    } else {
+      setPendingApprovals((prev) => prev.filter((item) => item.id !== selectedItem.id))
+      setApprovedItems((prev) => [
+        ...prev,
+        {
+          ...selectedItem,
+          approvedDate: new Date().toISOString().split("T")[0],
+          approvedBy: editedProfile.name,
+        },
+      ])
+    }
+    setShowConfirmDialog(false)
+    setSelectedItem(null)
+  }
+
+  const handleEdit = (item) => {
+    setSelectedItem(item)
     setShowEditModal(true)
   }
 
-  const handleSaveEditedItem = (updatedItem) => {
-    setApprovedList(approvedList.map((item) => (item.id === updatedItem.id ? updatedItem : item)))
+  const handleSaveEdit = (editedItem) => {
+    setApprovedItems((prev) => prev.map((item) => (item.id === editedItem.id ? editedItem : item)))
     setShowEditModal(false)
-    setEditingItem(null)
+    setSelectedItem(null)
   }
 
-  const handleDeclineApproved = (itemToDecline) => {
-    setApprovedList(approvedList.filter((item) => item.id !== itemToDecline.id))
-    setPendingApprovals([
-      ...pendingApprovals,
-      {
-        id: itemToDecline.id, // Keep original ID or generate new if preferred
-        type: itemToDecline.type,
-        applicant: itemToDecline.applicant,
-        date: new Date().toISOString().slice(0, 10), // Set current date for re-pending
-        priority: "Medium", // Assign a default priority
-      },
-    ])
-    alert("Item declined and moved back to pending list.")
+  const exportToCSV = (data, filename) => {
+    const csvContent = data.map((row) => Object.values(row).join(",")).join("\n")
+    const blob = new Blob([csvContent], { type: "text/csv" })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = filename
+    a.click()
   }
 
-  const getStatsData = () => {
-    return {
-      totalColleges: colleges.length,
-      activeATL: colleges.filter((c) => c.approval === "Approved").length,
-      totalStudents: colleges.reduce((sum, college) => sum + (college.students || 0), 0),
-      pendingSetup: colleges.filter((c) => c.approval === "Pending").length,
-    }
+  const exportToExcel = (data, filename) => {
+    // Simplified Excel export (in real implementation, use a library like xlsx)
+    exportToCSV(data, filename.replace(".xlsx", ".csv"))
   }
 
   const renderContent = () => {
     switch (activeTab) {
       case "home":
-        const stats = getStatsData()
-
-        const getFilteredColleges = () => {
-          if (selectedCollege === "All Colleges") {
-            return colleges
-          }
-          return colleges.filter((college) => college.clg === selectedCollege)
-        }
-
         return (
           <div className="p-6">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">University Coordinator Dashboard</h1>
               <p className="text-gray-600">
-                {editedProfile.university} - Welcome back, {editedProfile.name}
+                Welcome back, {editedProfile.name} from {editedProfile.university}.
               </p>
-            </div>
-
-            {/* College Dropdown Filter */}
-            <div className="mb-6">
-              <div className="relative inline-block">
-                <select
-                  value={selectedCollege}
-                  onChange={(e) => setSelectedCollege(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="All Colleges">All Colleges</option>
-                  {colleges.map((college) => (
-                    <option key={college.id} value={college.clg}>
-                      {college.clg}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-              </div>
             </div>
 
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-blue-100 text-sm">Total Colleges</p>
-                    <p className="text-3xl font-bold">{getFilteredColleges().length}</p>
-                    <p className="text-blue-200 text-xs mt-1">Under university</p>
-                  </div>
-                  <School className="h-8 w-8 text-blue-200" />
-                </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Total Colleges</h3>
+                <p className="text-4xl font-bold text-blue-600 mb-1">{collegesData.length}</p>
+                <p className="text-sm text-gray-600">Under coordination</p>
               </div>
 
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-green-100 text-sm">Active ATL</p>
-                    <p className="text-3xl font-bold">
-                      {getFilteredColleges().filter((c) => c.approval === "Approved").length}
-                    </p>
-                    <p className="text-green-200 text-xs mt-1">Operational</p>
-                  </div>
-                  <Award className="h-8 w-8 text-green-200" />
-                </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Active Teams</h3>
+                <p className="text-4xl font-bold text-green-600 mb-1">
+                  {collegesData.reduce((sum, college) => sum + college.teamsActive, 0)}
+                </p>
+                <p className="text-sm text-gray-600">Across all colleges</p>
               </div>
 
-              <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-purple-100 text-sm">Pending Approvals</p>
-                    <p className="text-3xl font-bold">{pendingApprovals.length}</p>
-                    <p className="text-purple-200 text-xs mt-1">Requires attention</p>
-                  </div>
-                  <FileCheck className="h-8 w-8 text-purple-200" />
-                </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Pending Approvals</h3>
+                <p className="text-4xl font-bold text-orange-600 mb-1">{pendingApprovals.length}</p>
+                <p className="text-sm text-gray-600">Awaiting review</p>
               </div>
 
-              <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-6 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-orange-100 text-sm">Pending Setup</p>
-                    <p className="text-3xl font-bold">
-                      {getFilteredColleges().filter((c) => c.approval === "Pending").length}
-                    </p>
-                    <p className="text-orange-200 text-xs mt-1">Requires attention</p>
-                  </div>
-                  <Calendar className="h-8 w-8 text-orange-200" />
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="font-semibold mb-2 text-gray-700">Completed Modules</h3>
+                <p className="text-4xl font-bold text-purple-600 mb-1">
+                  {moduleCompletionData.filter((item) => item.status === "approved").length}
+                </p>
+                <p className="text-sm text-gray-600">Approved completions</p>
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+              <div className="space-y-4">
+                <div className="flex items-center p-3 bg-blue-50 rounded-lg">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                  <span className="text-sm">New module completion request from GITAM University</span>
+                </div>
+                <div className="flex items-center p-3 bg-green-50 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                  <span className="text-sm">Certificate approved for Andhra University College</span>
+                </div>
+                <div className="flex items-center p-3 bg-orange-50 rounded-lg">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
+                  <span className="text-sm">Resource request pending from Vignan's Institute</span>
                 </div>
               </div>
             </div>
@@ -289,8 +302,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center mb-8">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mr-6">
-                  <User className="h-10 w-10 text-green-600" />
+                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mr-6">
+                  <User className="h-10 w-10 text-blue-600" />
                 </div>
                 <div>
                   <h3 className="text-xl font-semibold">Profile Information</h3>
@@ -312,7 +325,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         type="text"
                         value={editedProfile.name}
                         onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -321,16 +334,16 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         type="text"
                         value={editedProfile.role}
                         onChange={(e) => setEditedProfile({ ...editedProfile, role: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Ph.no</label>
                       <input
                         type="text"
                         value={editedProfile.phone}
                         onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -339,7 +352,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         type="email"
                         value={editedProfile.email}
                         onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -348,16 +361,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         type="text"
                         value={editedProfile.university}
                         onChange={(e) => setEditedProfile({ ...editedProfile, university: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                      <input
-                        type="text"
-                        value={editedProfile.department}
-                        onChange={(e) => setEditedProfile({ ...editedProfile, department: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
@@ -388,7 +392,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                       <span className="text-gray-900">{editedProfile.role}</span>
                     </div>
                     <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Phone</span>
+                      <span className="font-medium text-gray-700">Ph.no</span>
                       <span className="text-gray-900">{editedProfile.phone}</span>
                     </div>
                     <div className="flex justify-between py-3 border-b border-gray-100">
@@ -399,10 +403,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                       <span className="font-medium text-gray-700">University</span>
                       <span className="text-gray-900">{editedProfile.university}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Department</span>
-                      <span className="text-gray-900">{editedProfile.department}</span>
-                    </div>
                   </div>
                 </div>
               )}
@@ -410,163 +410,68 @@ const UCDashboard = ({ currentUser, onLogout }) => {
           </div>
         )
 
-      case "approvals":
-        return (
-          <div className="p-6 space-y-8">
-            <h2 className="text-2xl font-bold">Approvals</h2>
-
-            {/* Pending List */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Pending list</h3>
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Type</th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Applicant
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Date</th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Priority
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {pendingApprovals.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.type}</td>
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.applicant}</td>
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.date}</td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <span
-                              className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                item.priority === "High"
-                                  ? "bg-red-100 text-red-800"
-                                  : item.priority === "Medium"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : "bg-green-100 text-green-800"
-                              }`}
-                            >
-                              {item.priority}
-                            </span>
-                          </td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => handleApprove(item)}
-                                className="p-1 rounded bg-green-100 text-green-600 hover:bg-green-200"
-                                title="Approve"
-                              >
-                                <CheckCircle className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleReject(item)}
-                                className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                                title="Reject"
-                              >
-                                <XCircle className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            {/* Approved List */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Approved list</h3>
-              <div className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-200">
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Type</th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Applicant
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Approved Date
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Approved By
-                        </th>
-                        <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {approvedList.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-50">
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.type}</td>
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.applicant}</td>
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.date}</td>
-                          <td className="border border-gray-300 px-4 py-3 text-gray-900">{item.approvedBy}</td>
-                          <td className="border border-gray-300 px-4 py-3">
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={() => handleEditApproved(item)}
-                                className="p-1 rounded bg-blue-100 text-blue-600 hover:bg-blue-200"
-                                title="Edit"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDeclineApproved(item)}
-                                className="p-1 rounded bg-red-100 text-red-600 hover:bg-red-200"
-                                title="Decline"
-                              >
-                                <XCircle className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            {showEditModal && editingItem && (
-              <EditApprovalModal
-                item={editingItem}
-                onSave={handleSaveEditedItem}
-                onClose={() => setShowEditModal(false)}
-              />
-            )}
-          </div>
-        )
-
       case "colleges":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Colleges list</h2>
+            <h2 className="text-2xl font-bold mb-6">Colleges List</h2>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">S.No</th>
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg id</th>
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg</th>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        S.No
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        College
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        District
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Mandal
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Village
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Mentor
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Teams Active
+                      </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {colleges.map((college) => (
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {collegesData.map((college) => (
                       <tr key={college.id} className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.sno}</td>
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clgId}</td>
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clg}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{college.sno}</td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                              <School className="h-4 w-4 text-blue-600" />
+                            </div>
+                            <span className="text-sm font-medium text-gray-900">{college.college}</span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.district}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.mandal}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.village}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.mentor}</td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              college.teamsActive >= 10
+                                ? "bg-green-100 text-green-800"
+                                : college.teamsActive >= 5
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {college.teamsActive}
+                          </span>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -579,46 +484,299 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       case "module-completion":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Modules completion</h2>
+            <h2 className="text-2xl font-bold mb-6">Module Completion</h2>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-gray-200">
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                        Clg Code
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        College Name
                       </th>
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">Clg</th>
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                        No. of mod comp
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Team ID
                       </th>
-                      <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-700">
-                        Approval
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        No. of Modules
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Modules Completed
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Progress
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Action
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {colleges.map((college) => (
-                      <tr key={college.id} className="hover:bg-gray-50">
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clgCode}</td>
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.clg}</td>
-                        <td className="border border-gray-300 px-4 py-3 text-gray-900">{college.noOfModComp}</td>
-                        <td className="border border-gray-300 px-4 py-3">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              college.approval === "Approved"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-yellow-100 text-yellow-800"
-                            }`}
-                          >
-                            {college.approval}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {moduleCompletionData.map((item) => {
+                      const progressPercentage = (item.modulesCompleted / item.modulesTotal) * 100
+                      return (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.collegeName}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.teamId}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.modulesTotal}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.modulesCompleted}</td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div
+                                className={`h-2 rounded-full ${
+                                  progressPercentage === 100
+                                    ? "bg-green-500"
+                                    : progressPercentage >= 75
+                                      ? "bg-blue-500"
+                                      : progressPercentage >= 50
+                                        ? "bg-yellow-500"
+                                        : "bg-red-500"
+                                }`}
+                                style={{ width: `${progressPercentage}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs text-gray-500 mt-1">{Math.round(progressPercentage)}%</span>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                item.status === "approved"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-yellow-100 text-yellow-800"
+                              }`}
+                            >
+                              {item.status === "approved" ? "Approved" : "Pending"}
+                            </span>
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            {item.status === "pending" && (
+                              <button
+                                onClick={() => handleApprove(item, "module")}
+                                className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700"
+                              >
+                                Approve
+                              </button>
+                            )}
+                            {item.status === "approved" && <span className="text-green-600 text-xs">✓ Approved</span>}
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+        )
+
+      case "approvals":
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-6">Approvals</h2>
+
+            {/* Pending Approvals */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-4">Pending Approvals ({pendingApprovals.length})</h3>
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Applicant
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Date
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Details
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {pendingApprovals.map((item) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.type}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.applicant}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.date}</td>
+                          <td className="px-4 py-4 text-sm text-gray-500">{item.details}</td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => handleApprove(item)}
+                              className="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 mr-2"
+                            >
+                              Approve
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Approved Items */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Approved Items ({approvedItems.length})</h3>
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Applicant
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Approved Date
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Approved By
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {approvedItems.map((item) => (
+                        <tr key={item.id} className="hover:bg-gray-50">
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.type}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.applicant}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedDate}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedBy}</td>
+                          <td className="px-4 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => handleEdit(item)}
+                              className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                            >
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+
+      case "export-data":
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-6">Export Data</h2>
+
+            <div className="max-w-md">
+              {/* School Data Export */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold mb-4">School Data</h3>
+                <p className="text-gray-600 mb-4">
+                  Export school information including student data, attendance, and location details.
+                </p>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => {
+                      const schoolData = [
+                        {
+                          "S.No": 1,
+                          "UDISE Code": "28230100101",
+                          "School Name": "Government High School Visakhapatnam",
+                          District: "Visakhapatnam",
+                          Mandal: "Visakhapatnam Urban",
+                          Active: "Yes",
+                          Girls: 220,
+                          Boys: 230,
+                          Total: 450,
+                          Teachers: 18,
+                          "Attendance Marked Dates": "2024-01-15, 2024-01-16, 2024-01-17",
+                          "Topic Covered": "Science Exhibition, Innovation Lab, Robotics Workshop",
+                          Latitude: "17.6868",
+                          Longitude: "83.2185",
+                        },
+                        {
+                          "S.No": 2,
+                          "UDISE Code": "28230200102",
+                          "School Name": "Zilla Parishad High School Vizianagaram",
+                          District: "Vizianagaram",
+                          Mandal: "Vizianagaram",
+                          Active: "Yes",
+                          Girls: 180,
+                          Boys: 200,
+                          Total: 380,
+                          Teachers: 15,
+                          "Attendance Marked Dates": "2024-01-14, 2024-01-15, 2024-01-16",
+                          "Topic Covered": "STEM Activities, Coding Basics, Environmental Science",
+                          Latitude: "18.1124",
+                          Longitude: "83.4116",
+                        },
+                      ]
+                      exportToCSV(schoolData, "school_data.csv")
+                    }}
+                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download CSV
+                  </button>
+                  <button
+                    onClick={() => {
+                      const schoolData = [
+                        {
+                          "S.No": 1,
+                          "UDISE Code": "28230100101",
+                          "School Name": "Government High School Visakhapatnam",
+                          District: "Visakhapatnam",
+                          Mandal: "Visakhapatnam Urban",
+                          Active: "Yes",
+                          Girls: 220,
+                          Boys: 230,
+                          Total: 450,
+                          Teachers: 18,
+                          "Attendance Marked Dates": "2024-01-15, 2024-01-16, 2024-01-17",
+                          "Topic Covered": "Science Exhibition, Innovation Lab, Robotics Workshop",
+                          Latitude: "17.6868",
+                          Longitude: "83.2185",
+                        },
+                        {
+                          "S.No": 2,
+                          "UDISE Code": "28230200102",
+                          "School Name": "Zilla Parishad High School Vizianagaram",
+                          District: "Vizianagaram",
+                          Mandal: "Vizianagaram",
+                          Active: "Yes",
+                          Girls: 180,
+                          Boys: 200,
+                          Total: 380,
+                          Teachers: 15,
+                          "Attendance Marked Dates": "2024-01-14, 2024-01-15, 2024-01-16",
+                          "Topic Covered": "STEM Activities, Coding Basics, Environmental Science",
+                          Latitude: "18.1124",
+                          Longitude: "83.4116",
+                        },
+                      ]
+                      exportToExcel(schoolData, "school_data.xlsx")
+                    }}
+                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Excel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -630,70 +788,134 @@ const UCDashboard = ({ currentUser, onLogout }) => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <div className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}>
-        {/* User Profile Section */}
-        <div className="p-4 border-b">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <User className="h-6 w-6 text-green-600" />
-            </div>
-            {sidebarOpen && (
-              <div>
-                <p className="font-medium text-gray-900">Name</p>
-                <p className="text-sm text-gray-500">University Coordinator</p>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <div className="flex flex-1">
+        {/* Sidebar */}
+        <div
+          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
+        >
+          {/* User Profile Section */}
+          <div className="p-4 border-b">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-blue-600" />
               </div>
-            )}
+              {sidebarOpen && (
+                <div>
+                  <p className="font-medium text-gray-900">{editedProfile.name}</p>
+                  <p className="text-sm text-gray-500">Univ Coordinator</p>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <ul className="space-y-2">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
+          {/* Navigation */}
+          <nav className="flex-1 p-4">
+            <ul className="space-y-2">
+              {sidebarItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
+                      activeTab === item.id
+                        ? "bg-gray-100 text-gray-900 font-medium"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    }`}
+                  >
+                    <item.icon className="h-5 w-5 mr-3" />
+                    {sidebarOpen && <span>{item.label}</span>}
+                  </button>
+                </li>
+              ))}
+              {/* Logout Button */}
+              <li>
                 <button
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                    activeTab === item.id
-                      ? "bg-green-50 text-green-700 font-medium"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
+                  onClick={onLogout}
+                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
                 >
-                  <item.icon className="h-5 w-5 mr-3" />
-                  {sidebarOpen && <span>{item.label}</span>}
+                  <LogOut className="h-5 w-5 mr-3" />
+                  {sidebarOpen && <span>Logout</span>}
                 </button>
               </li>
-            ))}
-            {/* Logout Button */}
-            <li>
+            </ul>
+          </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <CommonHeader
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            onLogout={onLogout}
+            currentUser={currentUser}
+            showSidebar={true}
+          />
+
+          {/* Main Content Area */}
+          <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
+
+      {/* Confirmation Dialog */}
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold mb-4">Confirm Approval</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to approve this {selectedItem?.type === "module" ? "module completion" : "request"}?
+            </p>
+            <div className="mb-4 p-3 bg-gray-50 rounded">
+              <p className="text-sm">
+                <strong>{selectedItem?.type === "module" ? "College:" : "Type:"} </strong>
+                {selectedItem?.type === "module" ? selectedItem?.collegeName : selectedItem?.type}
+              </p>
+              <p className="text-sm">
+                <strong>{selectedItem?.type === "module" ? "Team ID:" : "Applicant:"} </strong>
+                {selectedItem?.type === "module" ? selectedItem?.teamId : selectedItem?.applicant}
+              </p>
+              {selectedItem?.details && (
+                <p className="text-sm">
+                  <strong>Details: </strong>
+                  {selectedItem.details}
+                </p>
+              )}
+            </div>
+            <div className="flex space-x-4">
               <button
-                onClick={onLogout}
-                className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
+                onClick={confirmApproval}
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
               >
-                <LogOut className="h-5 w-5 mr-3" />
-                {sidebarOpen && <span>Logout</span>}
+                Yes, Approve
               </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+              <button
+                onClick={() => {
+                  setShowConfirmDialog(false)
+                  setSelectedItem(null)
+                }}
+                className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <CommonHeader
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onLogout={onLogout}
-          currentUser={currentUser}
-          showSidebar={true}
+      {/* Edit Modal */}
+      {showEditModal && selectedItem && (
+        <EditApprovalModal
+          item={selectedItem}
+          onSave={handleSaveEdit}
+          onClose={() => {
+            setShowEditModal(false)
+            setSelectedItem(null)
+          }}
         />
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
-      </div>
+      )}
     </div>
   )
 }
