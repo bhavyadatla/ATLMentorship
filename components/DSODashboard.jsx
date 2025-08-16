@@ -459,7 +459,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                   className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Export CSV
+                  Export
                   <ChevronDown className="h-4 w-4 ml-2" />
                 </button>
                 {showExportDropdown && (
@@ -468,13 +468,13 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                       onClick={exportToCSV}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
                     >
-                      Export as CSV
+                      CSV
                     </button>
                     <button
                       onClick={exportToExcel}
                       className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
                     >
-                      Export as Excel
+                      Excel
                     </button>
                   </div>
                 )}

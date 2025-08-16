@@ -693,7 +693,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
                 <div className="relative inline-block">
                   <div className="flex">
-                    {/* Main export button (CSV default) */}
                     <button
                       onClick={() => {
                         const exportData = collegesData.map((college) => ({
@@ -710,7 +709,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                       className="px-4 py-2 bg-green-600 text-white rounded-l-lg hover:bg-green-700 flex items-center"
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Export CSV
+                      Export
                     </button>
 
                     {/* Dropdown button */}
@@ -747,10 +746,9 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                               exportToCSV(exportData, "colleges_data.csv")
                               document.getElementById("export-dropdown").classList.add("hidden")
                             }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
                           >
-                            <Download className="h-4 w-4 mr-2" />
-                            Export as CSV
+                            CSV
                           </button>
                           <button
                             onClick={() => {
@@ -766,10 +764,9 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                               exportToExcel(exportData, "colleges_data.xlsx")
                               document.getElementById("export-dropdown").classList.add("hidden")
                             }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
                           >
-                            <Download className="h-4 w-4 mr-2" />
-                            Export as Excel
+                            Excel
                           </button>
                         </div>
                       </div>

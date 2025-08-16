@@ -1,20 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {
-  Search,
-  Download,
-  FileText,
-  X,
-  Edit,
-  Users,
-  CheckCircle,
-  Clock,
-  Rocket,
-  User,
-  Home,
-  LogOut,
-} from "lucide-react"
+import { Search, Download, X, Edit, Users, CheckCircle, Clock, Rocket, User, Home, LogOut } from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
 import Footer from "./Footer"
 
@@ -556,69 +543,102 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-gray-900">Team Data</h2>
-                  <div className="flex space-x-4">
-                    <button
-                      onClick={exportToCSV}
-                      className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      <Download className="w-4 h-4" />
-                      <span>CSV</span>
-                    </button>
-                    <button
-                      onClick={exportToExcel}
-                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <FileText className="w-4 h-4" />
-                      <span>Excel</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Team No
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Name
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Roll No
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Phone No
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Last Visit
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {teamMembers.map((member) => (
-                        <tr key={member.id}>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {member.teamNo}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.name}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.rollNo}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.phoneNo}</td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.lastVisit}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(member.status)}`}
+                  <div className="relative inline-block">
+                    <div className="flex">
+                      <button
+                        onClick={exportToCSV}
+                        className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-l-lg hover:bg-green-700 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        <span>Export</span>
+                      </button>
+                      <div className="relative">
+                        <button
+                          onClick={() => {
+                            const dropdown = document.getElementById("cc-export-dropdown")
+                            dropdown.classList.toggle("hidden")
+                          }}
+                          className="px-3 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 border-l border-green-500 flex items-center"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+                        <div
+                          id="cc-export-dropdown"
+                          className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
+                        >
+                          <div className="py-1">
+                            <button
+                              onClick={() => {
+                                exportToCSV()
+                                document.getElementById("cc-export-dropdown").classList.add("hidden")
+                              }}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
                             >
-                              {member.status}
-                            </span>
-                          </td>
+                              CSV
+                            </button>
+                            <button
+                              onClick={() => {
+                                exportToExcel()
+                                document.getElementById("cc-export-dropdown").classList.add("hidden")
+                              }}
+                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
+                            >
+                              Excel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Team No
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Roll No
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Phone No
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Last Visit
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {teamMembers.map((member) => (
+                          <tr key={member.id}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                              {member.teamNo}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.name}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.rollNo}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.phoneNo}</td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.lastVisit}</td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span
+                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(member.status)}`}
+                              >
+                                {member.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

@@ -26,7 +26,7 @@ const Footer = ({
     },
     {
       name: "BCDE",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0009.jpg-kKRio9ue9yg7lw0LXBnb5wHNxvBQw3.jpeg",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-08-16%20at%2021.13.49_8f9d6a76.jpg-1w98rktGH8Wc5isv1TSTbPGD881h66.jpeg",
     },
     {
       name: "UNICEF",

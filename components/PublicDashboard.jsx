@@ -128,7 +128,7 @@ const PublicDashboard = ({ onNavigate }) => {
         </div>
       </div>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   )
 }
