@@ -20,7 +20,6 @@ const SODashboard = ({ currentUser, onLogout }) => {
     email: "venkata.rao@ap.gov.in",
     role: "State Officer",
     state: "Andhra Pradesh",
-    department: "Education & Technology",
     experience: "18 years",
   })
 
@@ -132,15 +131,6 @@ const SODashboard = ({ currentUser, onLogout }) => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                      <input
-                        type="text"
-                        value={editedProfile.department}
-                        onChange={(e) => setEditedProfile({ ...editedProfile, department: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
-                    </div>
                   </div>
                   <div className="flex space-x-4 pt-4">
                     <button
@@ -180,15 +170,6 @@ const SODashboard = ({ currentUser, onLogout }) => {
                       <span className="font-medium text-gray-700">State</span>
                       <span className="text-gray-900">{editedProfile.state}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Department</span>
-                      <span className="text-gray-900">{editedProfile.department}</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-end mt-6">
-                    <button className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-                      Delete Media
-                    </button>
                   </div>
                 </div>
               )}

@@ -170,15 +170,19 @@ const Footer = ({
   return (
     <footer className="mt-auto">
       {/* Partner Logos Section */}
-      <div className="bg-gray-50 py-8">
+      <div className="bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 justify-items-center">
             {partnerLogos.map((partner, index) => (
               <div
                 key={index}
-                className="w-20 h-20 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                className="w-32 h-32 bg-white flex items-center justify-center overflow-hidden shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer"
               >
-                <img src={partner.logo || "/placeholder.svg"} alt={partner.name} className="w-16 h-16 object-contain" />
+                <img
+                  src={partner.logo || "/placeholder.svg"}
+                  alt={partner.name}
+                  className="w-28 h-28 object-contain p-2"
+                />
               </div>
             ))}
           </div>
@@ -267,15 +271,7 @@ const Footer = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("about")}
-                    className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                  >
-                    Mission & Vision
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onNavigate && onNavigate("about")}
+                    onClick={() => onNavigate && onNavigate("support")}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     FAQ's

@@ -119,47 +119,58 @@ const UCDashboard = ({ currentUser, onLogout }) => {
     },
   ])
 
-  // Sample data for approvals
   const [pendingApprovals, setPendingApprovals] = useState([
     {
       id: 1,
-      type: "Certificate Request",
-      applicant: "Government Engineering College - TEAM001",
-      date: "2024-01-15",
-      details: "Module completion certificate for Innovation Lab",
+      sno: 1,
+      fullName: "Dr. Rajesh Kumar",
+      phoneNumber: "+91 98765 43210",
+      role: "CC - College Coordinator",
+      college: "Government Engineering College",
+      email: "rajesh.kumar@gec.edu.in",
     },
     {
       id: 2,
-      type: "Resource Request",
-      applicant: "GITAM University - TEAM003",
-      date: "2024-01-14",
-      details: "Additional lab equipment for robotics project",
+      sno: 2,
+      fullName: "Prof. Sunita Rao",
+      phoneNumber: "+91 87654 32109",
+      role: "CC - College Coordinator",
+      college: "Andhra University College of Engineering",
+      email: "sunita.rao@auce.edu.in",
     },
     {
       id: 3,
-      type: "Event Approval",
-      applicant: "Centurion University - TEAM005",
-      date: "2024-01-13",
-      details: "Science exhibition and innovation showcase",
+      sno: 3,
+      fullName: "Dr. Anil Reddy",
+      phoneNumber: "+91 76543 21098",
+      role: "CC - College Coordinator",
+      college: "GITAM University",
+      email: "anil.reddy@gitam.edu",
     },
   ])
 
   const [approvedItems, setApprovedItems] = useState([
     {
       id: 4,
-      type: "Certificate Request",
-      applicant: "Andhra University College - TEAM002",
+      sno: 4,
+      fullName: "Dr. Kavitha Singh",
+      phoneNumber: "+91 65432 10987",
+      role: "CC - College Coordinator",
+      college: "Vignan's Institute of Technology",
+      email: "kavitha.singh@vignan.edu.in",
       approvedDate: "2024-01-10",
       approvedBy: "Dr. Priya Sharma",
-      details: "Module completion certificate approved",
     },
     {
       id: 5,
-      type: "Resource Request",
-      applicant: "Vignan's Institute - TEAM004",
+      sno: 5,
+      fullName: "Prof. Ramesh Babu",
+      phoneNumber: "+91 54321 09876",
+      role: "CC - College Coordinator",
+      college: "Centurion University",
+      email: "ramesh.babu@centurion.edu.in",
       approvedDate: "2024-01-08",
       approvedBy: "Dr. Priya Sharma",
-      details: "Lab equipment request approved",
     },
   ])
 
@@ -558,27 +569,30 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       case "approvals":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Approvals</h2>
+            <h2 className="text-2xl font-bold mb-6">CC User Approvals</h2>
 
             {/* Pending Approvals */}
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4">Pending Approvals ({pendingApprovals.length})</h3>
+              <h3 className="text-lg font-semibold mb-4">Pending CC Login Approvals ({pendingApprovals.length})</h3>
               <div className="bg-white rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Type
+                          S.No
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Applicant
+                          Full Name
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Date
+                          Phone Number
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Details
+                          Role
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          College
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Action
@@ -588,10 +602,13 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                     <tbody className="bg-white divide-y divide-gray-200">
                       {pendingApprovals.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.type}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.applicant}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.date}</td>
-                          <td className="px-4 py-4 text-sm text-gray-500">{item.details}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.sno}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.fullName}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.phoneNumber}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.role}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.college}</td>
                           <td className="px-4 py-4 whitespace-nowrap">
                             <button
                               onClick={() => handleApprove(item)}
@@ -610,17 +627,26 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
             {/* Approved Items */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Approved Items ({approvedItems.length})</h3>
+              <h3 className="text-lg font-semibold mb-4">Approved CC Users ({approvedItems.length})</h3>
               <div className="bg-white rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50">
                       <tr>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Type
+                          S.No
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Applicant
+                          Full Name
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Phone Number
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Role
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          College
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Approved Date
@@ -628,26 +654,20 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Approved By
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Action
-                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {approvedItems.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.type}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.applicant}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.sno}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {item.fullName}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.phoneNumber}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.role}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.college}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedDate}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedBy}</td>
-                          <td className="px-4 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleEdit(item)}
-                              className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-                            >
-                              Edit
-                            </button>
-                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -849,31 +869,47 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       {showConfirmDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold mb-4">Confirm Approval</h3>
+            <h3 className="text-lg font-semibold mb-4">Confirm User Approval</h3>
             <p className="text-gray-600 mb-6">
-              Are you sure you want to approve this {selectedItem?.type === "module" ? "module completion" : "request"}?
+              Are you sure you want to approve this{" "}
+              {selectedItem?.type === "module" ? "module completion" : "CC user for login access"}?
             </p>
             <div className="mb-4 p-3 bg-gray-50 rounded">
-              <p className="text-sm">
-                <strong>{selectedItem?.type === "module" ? "College:" : "Type:"} </strong>
-                {selectedItem?.type === "module" ? selectedItem?.collegeName : selectedItem?.type}
-              </p>
-              <p className="text-sm">
-                <strong>{selectedItem?.type === "module" ? "Team ID:" : "Applicant:"} </strong>
-                {selectedItem?.type === "module" ? selectedItem?.teamId : selectedItem?.applicant}
-              </p>
-              {selectedItem?.type === "module" && (
-                <p className="text-sm">
-                  <strong>Completed Modules: </strong>
-                  {selectedItem.completedModules?.join(", ")} ({selectedItem.completedModules?.length}/
-                  {selectedItem.modulesTotal})
-                </p>
-              )}
-              {selectedItem?.details && (
-                <p className="text-sm">
-                  <strong>Details: </strong>
-                  {selectedItem.details}
-                </p>
+              {selectedItem?.type === "module" ? (
+                <>
+                  <p className="text-sm">
+                    <strong>College: </strong>
+                    {selectedItem?.collegeName}
+                  </p>
+                  <p className="text-sm">
+                    <strong>Team ID: </strong>
+                    {selectedItem?.teamId}
+                  </p>
+                  <p className="text-sm">
+                    <strong>Completed Modules: </strong>
+                    {selectedItem.completedModules?.join(", ")} ({selectedItem.completedModules?.length}/
+                    {selectedItem.modulesTotal})
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm">
+                    <strong>Name: </strong>
+                    {selectedItem?.fullName}
+                  </p>
+                  <p className="text-sm">
+                    <strong>Phone: </strong>
+                    {selectedItem?.phoneNumber}
+                  </p>
+                  <p className="text-sm">
+                    <strong>Role: </strong>
+                    {selectedItem?.role}
+                  </p>
+                  <p className="text-sm">
+                    <strong>College: </strong>
+                    {selectedItem?.college}
+                  </p>
+                </>
               )}
             </div>
             <div className="flex space-x-4">
