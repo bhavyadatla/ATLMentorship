@@ -14,7 +14,7 @@ const SOModuleCompletion = () => {
       collegeName: "AU College of Engineering",
       teamId: "AU-ENG-001",
       totalModules: 12,
-      completedModules: 8,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8], // Changed to array of completed module numbers
       status: "Pending",
     },
     {
@@ -23,7 +23,7 @@ const SOModuleCompletion = () => {
       collegeName: "JNTU College of Engineering",
       teamId: "JNTU-ENG-002",
       totalModules: 10,
-      completedModules: 10,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // All modules completed
       status: "Pending",
     },
     {
@@ -32,7 +32,7 @@ const SOModuleCompletion = () => {
       collegeName: "SV College of Engineering",
       teamId: "SV-ENG-003",
       totalModules: 15,
-      completedModules: 12,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // 12 modules completed
       status: "Approved",
     },
     {
@@ -41,7 +41,7 @@ const SOModuleCompletion = () => {
       collegeName: "ANU College of Engineering",
       teamId: "ANU-ENG-004",
       totalModules: 8,
-      completedModules: 6,
+      completedModules: [1, 2, 3, 4, 5, 6], // 6 modules completed
       status: "Pending",
     },
     {
@@ -50,7 +50,7 @@ const SOModuleCompletion = () => {
       collegeName: "OU College of Engineering",
       teamId: "OU-ENG-005",
       totalModules: 12,
-      completedModules: 12,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // All modules completed
       status: "Approved",
     },
   ])
@@ -68,18 +68,6 @@ const SOModuleCompletion = () => {
     }
     setShowConfirmDialog(false)
     setSelectedItem(null)
-  }
-
-  const getProgressColor = (completed, total) => {
-    const percentage = (completed / total) * 100
-    if (percentage === 100) return "bg-green-500"
-    if (percentage >= 75) return "bg-blue-500"
-    if (percentage >= 50) return "bg-yellow-500"
-    return "bg-red-500"
-  }
-
-  const getProgressPercentage = (completed, total) => {
-    return Math.round((completed / total) * 100)
   }
 
   return (
@@ -110,9 +98,6 @@ const SOModuleCompletion = () => {
                   Modules Completed
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Progress
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -128,18 +113,7 @@ const SOModuleCompletion = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-mono">{item.teamId}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.totalModules}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {item.completedModules}/{item.totalModules}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full ${getProgressColor(item.completedModules, item.totalModules)}`}
-                        style={{ width: `${getProgressPercentage(item.completedModules, item.totalModules)}%` }}
-                      ></div>
-                    </div>
-                    <span className="text-xs text-gray-500 mt-1">
-                      {getProgressPercentage(item.completedModules, item.totalModules)}%
-                    </span>
+                    {item.completedModules.join(", ")}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
@@ -193,11 +167,8 @@ const SOModuleCompletion = () => {
                   <strong>Total Modules:</strong> {selectedItem.totalModules}
                 </p>
                 <p className="text-sm text-gray-600 mb-2">
-                  <strong>Completed:</strong> {selectedItem.completedModules}/{selectedItem.totalModules}
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>Progress:</strong>{" "}
-                  {getProgressPercentage(selectedItem.completedModules, selectedItem.totalModules)}%
+                  <strong>Completed:</strong> {selectedItem.completedModules.join(", ")} (
+                  {selectedItem.completedModules.length}/{selectedItem.totalModules})
                 </p>
               </div>
               <p className="text-sm text-gray-500 mt-4">Are you sure you want to approve this module completion?</p>

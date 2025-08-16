@@ -284,7 +284,14 @@ const SODashboard = ({ currentUser, onLogout }) => {
       </div>
 
       {/* Footer */}
-      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
+      <Footer
+        sidebarItems={sidebarItems}
+        onNavigate={handleNavigate}
+        onLogout={onLogout}
+        isLoggedIn={true}
+        currentUser={currentUser}
+        dashboardType="SO"
+      />
     </div>
   )
 }

@@ -1,11 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Download, FileText, Plus, X, Edit, Users, CheckCircle, Clock, Rocket } from "lucide-react"
+import {
+  Search,
+  Download,
+  FileText,
+  X,
+  Edit,
+  Users,
+  CheckCircle,
+  Clock,
+  Rocket,
+  User,
+  Home,
+  LogOut,
+} from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
+import Footer from "./Footer"
 
-const CCDashboard = ({ onNavigate }) => {
+const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [showAddMemberModal, setShowAddMemberModal] = useState(false)
   const [showApproveDialog, setShowApproveDialog] = useState(false)
@@ -63,14 +78,12 @@ const CCDashboard = ({ onNavigate }) => {
 
   // Profile data
   const [profileData, setProfileData] = useState({
-    name: "Dr. Rajesh Kumar",
-    email: "rajesh.kumar@college.edu",
-    phone: "+91 9876543210",
-    college: "ABC Engineering College",
-    department: "Computer Science",
-    experience: "10 years",
-    role: "College Coordinator",
-    joinDate: "January 2020",
+    name: currentUser.name || "Dr. Rajesh Kumar",
+    email: currentUser.email || "rajesh.kumar@college.edu",
+    phone: currentUser.phone || "+91 9876543210",
+    universityName: currentUser.universityName || "ABC University",
+    collegeName: currentUser.collegeName || "BCDE Engineering College",
+    role: currentUser.role || "BCDE College Coordinator",
   })
 
   // Add member form data
@@ -189,34 +202,86 @@ const CCDashboard = ({ onNavigate }) => {
   }
 
   const sidebarItems = [
-    { id: "home", label: "Home", icon: "🏠" },
-    { id: "profile", label: "Profile", icon: "👤" },
-    { id: "team", label: "Team", icon: "👥" },
-    { id: "export-data", label: "Export Data", icon: "📊" },
+    { id: "home", label: "Home", icon: Home },
+    { id: "profile", label: "Profile", icon: User },
+    { id: "team", label: "Teams List", icon: Users },
+    { id: "export-data", label: "Export Data", icon: Download },
+    { id: "logout", label: "Logout", icon: LogOut },
   ]
+
+  const handleLogout = () => {
+    if (onNavigate) {
+      onNavigate("login")
+    } else if (onLogout) {
+      onLogout()
+    }
+  }
+
+  const handleSidebarClick = (itemId) => {
+    if (itemId === "logout") {
+      handleLogout()
+    } else {
+      setActiveTab(itemId)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <CommonHeader currentPage="dashboard" onNavigate={onNavigate} showSidebar={true} showUserMenu={true} />
+      <CommonHeader
+        currentPage="dashboard"
+        onNavigate={onNavigate}
+        showSidebar={true}
+        showUserMenu={true}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
       <div className="flex">
         {/* Sidebar */}
-        <div className="w-64 bg-white shadow-md min-h-screen">
-          <div className="p-4">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">College Coordinator</h2>
-            <nav className="space-y-2">
-              {sidebarItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg text-left transition-colors ${
-                    activeTab === item.id ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
+        <div className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-md min-h-screen transition-all duration-300`}>
+          <div className="p-4 border-b">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="h-6 w-6 text-blue-600" />
+                </div>
+                {sidebarOpen && (
+                  <div>
+                    <p className="font-medium text-gray-900">{profileData.name}</p>
+                    <p className="text-sm text-gray-500">College Coordinator</p>
+                  </div>
+                )}
+              </div>
+              {sidebarOpen && (
+                <button onClick={() => setSidebarOpen(false)} className="p-1 text-gray-400 hover:text-gray-600">
+                  <X className="w-5 h-5" />
                 </button>
-              ))}
+              )}
+            </div>
+          </div>
+
+          <div className="p-4">
+            {sidebarOpen && <h2 className="text-xl font-bold text-gray-800 mb-4">College Coordinator</h2>}
+            <nav className="space-y-2">
+              {sidebarItems.map((item) => {
+                const IconComponent = item.icon
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleSidebarClick(item.id)}
+                    className={`w-full flex items-center space-x-3 px-4 py-2 rounded-lg text-left transition-colors ${
+                      activeTab === item.id
+                        ? "bg-blue-100 text-blue-700"
+                        : item.id === "logout"
+                          ? "text-red-600 hover:bg-red-50"
+                          : "text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5" />
+                    {sidebarOpen && <span>{item.label}</span>}
+                  </button>
+                )
+              })}
             </nav>
           </div>
         </div>
@@ -305,7 +370,7 @@ const CCDashboard = ({ onNavigate }) => {
                   <form onSubmit={handleProfileSave} className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                         <input
                           type="text"
                           value={profileData.name}
@@ -314,7 +379,7 @@ const CCDashboard = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                         <input
                           type="email"
                           value={profileData.email}
@@ -323,7 +388,7 @@ const CCDashboard = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                         <input
                           type="tel"
                           value={profileData.phone}
@@ -332,30 +397,31 @@ const CCDashboard = ({ onNavigate }) => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">College</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">University Name</label>
                         <input
                           type="text"
-                          value={profileData.college}
-                          onChange={(e) => setProfileData({ ...profileData, college: e.target.value })}
+                          value={profileData.universityName}
+                          onChange={(e) => setProfileData({ ...profileData, universityName: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">College Name</label>
                         <input
                           type="text"
-                          value={profileData.department}
-                          onChange={(e) => setProfileData({ ...profileData, department: e.target.value })}
+                          value={profileData.collegeName}
+                          onChange={(e) => setProfileData({ ...profileData, collegeName: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
                         <input
                           type="text"
-                          value={profileData.experience}
-                          onChange={(e) => setProfileData({ ...profileData, experience: e.target.value })}
+                          value={profileData.role}
+                          onChange={(e) => setProfileData({ ...profileData, role: e.target.value })}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          readOnly
                         />
                       </div>
                     </div>
@@ -381,15 +447,15 @@ const CCDashboard = ({ onNavigate }) => {
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
                       <div className="space-y-3">
                         <div>
-                          <span className="text-sm font-medium text-gray-600">Name:</span>
+                          <span className="text-sm font-medium text-gray-600">Full Name:</span>
                           <p className="text-gray-900">{profileData.name}</p>
                         </div>
                         <div>
-                          <span className="text-sm font-medium text-gray-600">Email:</span>
+                          <span className="text-sm font-medium text-gray-600">Email Address:</span>
                           <p className="text-gray-900">{profileData.email}</p>
                         </div>
                         <div>
-                          <span className="text-sm font-medium text-gray-600">Phone:</span>
+                          <span className="text-sm font-medium text-gray-600">Phone Number:</span>
                           <p className="text-gray-900">{profileData.phone}</p>
                         </div>
                       </div>
@@ -398,24 +464,16 @@ const CCDashboard = ({ onNavigate }) => {
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">Professional Information</h3>
                       <div className="space-y-3">
                         <div>
-                          <span className="text-sm font-medium text-gray-600">College:</span>
-                          <p className="text-gray-900">{profileData.college}</p>
+                          <span className="text-sm font-medium text-gray-600">University Name:</span>
+                          <p className="text-gray-900">{profileData.universityName}</p>
                         </div>
                         <div>
-                          <span className="text-sm font-medium text-gray-600">Department:</span>
-                          <p className="text-gray-900">{profileData.department}</p>
-                        </div>
-                        <div>
-                          <span className="text-sm font-medium text-gray-600">Experience:</span>
-                          <p className="text-gray-900">{profileData.experience}</p>
+                          <span className="text-sm font-medium text-gray-600">College Name:</span>
+                          <p className="text-gray-900">{profileData.collegeName}</p>
                         </div>
                         <div>
                           <span className="text-sm font-medium text-gray-600">Role:</span>
                           <p className="text-gray-900">{profileData.role}</p>
-                        </div>
-                        <div>
-                          <span className="text-sm font-medium text-gray-600">Join Date:</span>
-                          <p className="text-gray-900">{profileData.joinDate}</p>
                         </div>
                       </div>
                     </div>
@@ -428,14 +486,7 @@ const CCDashboard = ({ onNavigate }) => {
           {activeTab === "team" && (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-gray-900">Team Management</h1>
-                <button
-                  onClick={() => setShowAddMemberModal(true)}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Member</span>
-                </button>
+                <h1 className="text-3xl font-bold text-gray-900">Teams List</h1>
               </div>
 
               {/* Search */}
@@ -474,10 +525,7 @@ const CCDashboard = ({ onNavigate }) => {
                           Last Visit
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Actions
+                          Team Member
                         </th>
                       </tr>
                     </thead>
@@ -491,23 +539,7 @@ const CCDashboard = ({ onNavigate }) => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.rollNo}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.phoneNo}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.lastVisit}</td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span
-                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(member.status)}`}
-                            >
-                              {member.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            {member.status === "Pending" && (
-                              <button
-                                onClick={() => handleApproveClick(member)}
-                                className="bg-green-600 text-white px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors"
-                              >
-                                Approve
-                              </button>
-                            )}
-                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.name}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -726,6 +758,16 @@ const CCDashboard = ({ onNavigate }) => {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <Footer
+        sidebarItems={sidebarItems}
+        onNavigate={onNavigate}
+        onLogout={handleLogout}
+        isLoggedIn={true}
+        currentUser={currentUser}
+        dashboardType="CC"
+      />
     </div>
   )
 }

@@ -42,6 +42,15 @@ const Dashboard = () => {
     window.location.href = "/"
   }
 
+  const handleNavigate = (page) => {
+    if (page === "login") {
+      handleLogout()
+    } else {
+      // Handle other navigation if needed
+      window.location.href = `/${page}`
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -80,7 +89,7 @@ const Dashboard = () => {
       return <UCDashboard currentUser={currentUser} onLogout={handleLogout} />
     case "cc":
     case "college coordinator":
-      return <CCDashboard currentUser={currentUser} onLogout={handleLogout} />
+      return <CCDashboard currentUser={currentUser} onLogout={handleLogout} onNavigate={handleNavigate} />
     case "so":
     case "state officer":
       return <SODashboard currentUser={currentUser} onLogout={handleLogout} />

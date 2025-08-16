@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit } from "lucide-react"
+import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit, Download } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 import Footer from "./Footer"
 
@@ -10,6 +10,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [selectedMandal, setSelectedMandal] = useState("All Mandals")
+  const [showExportDropdown, setShowExportDropdown] = useState(false)
   const [editedProfile, setEditedProfile] = useState({
     name: "Dr. Suresh Reddy",
     phone: "+91 98765 43210",
@@ -18,7 +19,6 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     district: "Krishna",
   })
 
-  // Sample data
   const mandals = [
     "All Mandals",
     "Machilipatnam",
@@ -159,7 +159,98 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     return schoolsData.filter((school) => school.mandal === selectedMandal)
   }
 
-  // Calculate stats for all schools
+  const exportToCSV = () => {
+    const filteredData = getFilteredSchools()
+    const headers = [
+      "S.NO",
+      "UDISE Code",
+      "School Name",
+      "Type",
+      "Mandal",
+      "Village",
+      "Girls",
+      "Boys",
+      "Total",
+      "Teachers",
+      "Active",
+    ]
+    const csvContent = [
+      headers.join(","),
+      ...filteredData.map((school, index) =>
+        [
+          index + 1,
+          school.udiseCode,
+          `"${school.name}"`,
+          school.type,
+          school.mandal,
+          school.village,
+          school.girls,
+          school.boys,
+          school.total,
+          school.teachers,
+          school.active,
+        ].join(","),
+      ),
+    ].join("\n")
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const link = document.createElement("a")
+    const url = URL.createObjectURL(blob)
+    link.setAttribute("href", url)
+    link.setAttribute("download", "schools_mapping.csv")
+    link.style.visibility = "hidden"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setShowExportDropdown(false)
+  }
+
+  const exportToExcel = () => {
+    const filteredData = getFilteredSchools()
+    const headers = [
+      "S.NO",
+      "UDISE Code",
+      "School Name",
+      "Type",
+      "Mandal",
+      "Village",
+      "Girls",
+      "Boys",
+      "Total",
+      "Teachers",
+      "Active",
+    ]
+    const excelContent = [
+      headers.join("\t"),
+      ...filteredData.map((school, index) =>
+        [
+          index + 1,
+          school.udiseCode,
+          school.name,
+          school.type,
+          school.mandal,
+          school.village,
+          school.girls,
+          school.boys,
+          school.total,
+          school.teachers,
+          school.active,
+        ].join("\t"),
+      ),
+    ].join("\n")
+
+    const blob = new Blob([excelContent], { type: "application/vnd.ms-excel;charset=utf-8;" })
+    const link = document.createElement("a")
+    const url = URL.createObjectURL(blob)
+    link.setAttribute("href", url)
+    link.setAttribute("download", "schools_mapping.xlsx")
+    link.style.visibility = "hidden"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    setShowExportDropdown(false)
+  }
+
   const getAllSchoolsStats = () => {
     const activeSchools = schoolsData.filter((s) => s.active === "Yes").length
     const totalStudents = schoolsData.reduce((sum, school) => sum + school.total, 0)
@@ -360,33 +451,48 @@ const DSODashboard = ({ currentUser, onLogout }) => {
       case "schools":
         return (
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Schools Mapping</h2>
-
-            {/* Filter Section */}
-            <div className="mb-6 flex items-center space-x-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Schools Mapping</h2>
               <div className="relative">
-                <select
-                  value={selectedMandal}
-                  onChange={(e) => setSelectedMandal(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                <button
+                  onClick={() => setShowExportDropdown(!showExportDropdown)}
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
-                  {mandals.map((mandal) => (
-                    <option key={mandal} value={mandal}>
-                      {mandal}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                  <ChevronDown className="h-4 w-4 ml-2" />
+                </button>
+                {showExportDropdown && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                    <button
+                      onClick={exportToCSV}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
+                    >
+                      Export as CSV
+                    </button>
+                    <button
+                      onClick={exportToExcel}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
+                    >
+                      Export as Excel
+                    </button>
+                  </div>
+                )}
               </div>
+            </div>
+
+            <div className="mb-4">
               <div className="text-sm text-gray-600">Showing {getFilteredSchools().length} schools</div>
             </div>
 
-            {/* Schools Table */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        S.NO
+                      </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         UDISE Code
                       </th>
@@ -420,8 +526,9 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {getFilteredSchools().map((school) => (
+                    {getFilteredSchools().map((school, index) => (
                       <tr key={school.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {school.udiseCode}
                         </td>
@@ -536,7 +643,14 @@ const DSODashboard = ({ currentUser, onLogout }) => {
       </div>
 
       {/* Footer */}
-      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
+      <Footer
+        sidebarItems={sidebarItems}
+        onNavigate={handleNavigate}
+        onLogout={onLogout}
+        isLoggedIn={true}
+        currentUser={currentUser}
+        dashboardType="DSO"
+      />
     </div>
   )
 }

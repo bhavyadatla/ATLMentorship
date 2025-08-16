@@ -30,8 +30,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       district: "Visakhapatnam",
       mandal: "Visakhapatnam Urban",
       village: "Visakhapatnam",
-      mentor: "Dr. Rajesh Kumar",
-      teamsActive: 8,
+      coordinator: "Dr. Rajesh Kumar",
+      numberOfTeams: 8,
     },
     {
       id: 2,
@@ -40,8 +40,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       district: "Visakhapatnam",
       mandal: "Visakhapatnam Urban",
       village: "Visakhapatnam",
-      mentor: "Prof. Sunita Rao",
-      teamsActive: 12,
+      coordinator: "Prof. Sunita Rao",
+      numberOfTeams: 12,
     },
     {
       id: 3,
@@ -50,8 +50,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       district: "Visakhapatnam",
       mandal: "Bheemunipatnam",
       village: "Rushikonda",
-      mentor: "Dr. Anil Reddy",
-      teamsActive: 15,
+      coordinator: "Dr. Anil Reddy",
+      numberOfTeams: 15,
     },
     {
       id: 4,
@@ -60,8 +60,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       district: "Visakhapatnam",
       mandal: "Duvvada",
       village: "Duvvada",
-      mentor: "Dr. Kavitha Singh",
-      teamsActive: 6,
+      coordinator: "Dr. Kavitha Singh",
+      numberOfTeams: 6,
     },
     {
       id: 5,
@@ -70,8 +70,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       district: "Vizianagaram",
       mandal: "Vizianagaram",
       village: "Vizianagaram",
-      mentor: "Prof. Ramesh Babu",
-      teamsActive: 9,
+      coordinator: "Prof. Ramesh Babu",
+      numberOfTeams: 9,
     },
   ])
 
@@ -82,7 +82,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       collegeName: "Government Engineering College",
       teamId: "TEAM001",
       modulesTotal: 10,
-      modulesCompleted: 8,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8], // 8 modules completed
       status: "pending",
     },
     {
@@ -90,7 +90,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       collegeName: "Andhra University College of Engineering",
       teamId: "TEAM002",
       modulesTotal: 12,
-      modulesCompleted: 12,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], // All 12 modules completed
       status: "approved",
     },
     {
@@ -98,7 +98,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       collegeName: "GITAM University",
       teamId: "TEAM003",
       modulesTotal: 8,
-      modulesCompleted: 6,
+      completedModules: [1, 2, 3, 4, 5, 6], // 6 modules completed
       status: "pending",
     },
     {
@@ -106,7 +106,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       collegeName: "Vignan's Institute of Technology",
       teamId: "TEAM004",
       modulesTotal: 10,
-      modulesCompleted: 10,
+      completedModules: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], // All 10 modules completed
       status: "approved",
     },
     {
@@ -114,7 +114,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       collegeName: "Centurion University",
       teamId: "TEAM005",
       modulesTotal: 9,
-      modulesCompleted: 4,
+      completedModules: [1, 2, 3, 4], // 4 modules completed
       status: "pending",
     },
   ])
@@ -254,7 +254,7 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="font-semibold mb-2 text-gray-700">Active Teams</h3>
                 <p className="text-4xl font-bold text-green-600 mb-1">
-                  {collegesData.reduce((sum, college) => sum + college.teamsActive, 0)}
+                  {collegesData.reduce((sum, college) => sum + college.numberOfTeams, 0)}
                 </p>
                 <p className="text-sm text-gray-600">Across all colleges</p>
               </div>
@@ -436,10 +436,10 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         Village
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Mentor
+                        Coordinator
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Teams Active
+                        Number of Teams
                       </th>
                     </tr>
                   </thead>
@@ -458,18 +458,18 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.district}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.mandal}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.village}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.mentor}</td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.coordinator}</td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                              college.teamsActive >= 10
+                              college.numberOfTeams >= 10
                                 ? "bg-green-100 text-green-800"
-                                : college.teamsActive >= 5
+                                : college.numberOfTeams >= 5
                                   ? "bg-yellow-100 text-yellow-800"
                                   : "bg-red-100 text-red-800"
                             }`}
                           >
-                            {college.teamsActive}
+                            {college.numberOfTeams}
                           </span>
                         </td>
                       </tr>
@@ -504,9 +504,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         Modules Completed
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Progress
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Status
                       </th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -516,7 +513,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {moduleCompletionData.map((item) => {
-                      const progressPercentage = (item.modulesCompleted / item.modulesTotal) * 100
                       return (
                         <tr key={item.id} className="hover:bg-gray-50">
                           <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
@@ -524,23 +520,8 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.teamId}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.modulesTotal}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.modulesCompleted}</td>
-                          <td className="px-4 py-4 whitespace-nowrap">
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div
-                                className={`h-2 rounded-full ${
-                                  progressPercentage === 100
-                                    ? "bg-green-500"
-                                    : progressPercentage >= 75
-                                      ? "bg-blue-500"
-                                      : progressPercentage >= 50
-                                        ? "bg-yellow-500"
-                                        : "bg-red-500"
-                                }`}
-                                style={{ width: `${progressPercentage}%` }}
-                              ></div>
-                            </div>
-                            <span className="text-xs text-gray-500 mt-1">{Math.round(progressPercentage)}%</span>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {item.completedModules.join(", ")}
                           </td>
                           <td className="px-4 py-4 whitespace-nowrap">
                             <span
@@ -683,99 +664,97 @@ const UCDashboard = ({ currentUser, onLogout }) => {
             <h2 className="text-2xl font-bold mb-6">Export Data</h2>
 
             <div className="max-w-md">
-              {/* School Data Export */}
+              {/* Colleges Data Export */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">School Data</h3>
+                <h3 className="text-lg font-semibold mb-4">Colleges Data</h3>
                 <p className="text-gray-600 mb-4">
-                  Export school information including student data, attendance, and location details.
+                  Export college information including coordinator details, location, and number of teams data.
                 </p>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => {
-                      const schoolData = [
-                        {
-                          "S.No": 1,
-                          "UDISE Code": "28230100101",
-                          "School Name": "Government High School Visakhapatnam",
-                          District: "Visakhapatnam",
-                          Mandal: "Visakhapatnam Urban",
-                          Active: "Yes",
-                          Girls: 220,
-                          Boys: 230,
-                          Total: 450,
-                          Teachers: 18,
-                          "Attendance Marked Dates": "2024-01-15, 2024-01-16, 2024-01-17",
-                          "Topic Covered": "Science Exhibition, Innovation Lab, Robotics Workshop",
-                          Latitude: "17.6868",
-                          Longitude: "83.2185",
-                        },
-                        {
-                          "S.No": 2,
-                          "UDISE Code": "28230200102",
-                          "School Name": "Zilla Parishad High School Vizianagaram",
-                          District: "Vizianagaram",
-                          Mandal: "Vizianagaram",
-                          Active: "Yes",
-                          Girls: 180,
-                          Boys: 200,
-                          Total: 380,
-                          Teachers: 15,
-                          "Attendance Marked Dates": "2024-01-14, 2024-01-15, 2024-01-16",
-                          "Topic Covered": "STEM Activities, Coding Basics, Environmental Science",
-                          Latitude: "18.1124",
-                          Longitude: "83.4116",
-                        },
-                      ]
-                      exportToCSV(schoolData, "school_data.csv")
-                    }}
-                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download CSV
-                  </button>
-                  <button
-                    onClick={() => {
-                      const schoolData = [
-                        {
-                          "S.No": 1,
-                          "UDISE Code": "28230100101",
-                          "School Name": "Government High School Visakhapatnam",
-                          District: "Visakhapatnam",
-                          Mandal: "Visakhapatnam Urban",
-                          Active: "Yes",
-                          Girls: 220,
-                          Boys: 230,
-                          Total: 450,
-                          Teachers: 18,
-                          "Attendance Marked Dates": "2024-01-15, 2024-01-16, 2024-01-17",
-                          "Topic Covered": "Science Exhibition, Innovation Lab, Robotics Workshop",
-                          Latitude: "17.6868",
-                          Longitude: "83.2185",
-                        },
-                        {
-                          "S.No": 2,
-                          "UDISE Code": "28230200102",
-                          "School Name": "Zilla Parishad High School Vizianagaram",
-                          District: "Vizianagaram",
-                          Mandal: "Vizianagaram",
-                          Active: "Yes",
-                          Girls: 180,
-                          Boys: 200,
-                          Total: 380,
-                          Teachers: 15,
-                          "Attendance Marked Dates": "2024-01-14, 2024-01-15, 2024-01-16",
-                          "Topic Covered": "STEM Activities, Coding Basics, Environmental Science",
-                          Latitude: "18.1124",
-                          Longitude: "83.4116",
-                        },
-                      ]
-                      exportToExcel(schoolData, "school_data.xlsx")
-                    }}
-                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center justify-center"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Excel
-                  </button>
+
+                <div className="relative inline-block">
+                  <div className="flex">
+                    {/* Main export button (CSV default) */}
+                    <button
+                      onClick={() => {
+                        const exportData = collegesData.map((college) => ({
+                          "S.No": college.sno,
+                          College: college.college,
+                          District: college.district,
+                          Mandal: college.mandal,
+                          Village: college.village,
+                          Coordinator: college.coordinator,
+                          "Number of Teams": college.numberOfTeams,
+                        }))
+                        exportToCSV(exportData, "colleges_data.csv")
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white rounded-l-lg hover:bg-green-700 flex items-center"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Export CSV
+                    </button>
+
+                    {/* Dropdown button */}
+                    <div className="relative">
+                      <button
+                        onClick={() => {
+                          const dropdown = document.getElementById("export-dropdown")
+                          dropdown.classList.toggle("hidden")
+                        }}
+                        className="px-3 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 border-l border-green-500 flex items-center"
+                      >
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+
+                      {/* Dropdown menu */}
+                      <div
+                        id="export-dropdown"
+                        className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
+                      >
+                        <div className="py-1">
+                          <button
+                            onClick={() => {
+                              const exportData = collegesData.map((college) => ({
+                                "S.No": college.sno,
+                                College: college.college,
+                                District: college.district,
+                                Mandal: college.mandal,
+                                Village: college.village,
+                                Coordinator: college.coordinator,
+                                "Number of Teams": college.numberOfTeams,
+                              }))
+                              exportToCSV(exportData, "colleges_data.csv")
+                              document.getElementById("export-dropdown").classList.add("hidden")
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Export as CSV
+                          </button>
+                          <button
+                            onClick={() => {
+                              const exportData = collegesData.map((college) => ({
+                                "S.No": college.sno,
+                                College: college.college,
+                                District: college.district,
+                                Mandal: college.mandal,
+                                Village: college.village,
+                                Coordinator: college.coordinator,
+                                "Number of Teams": college.numberOfTeams,
+                              }))
+                              exportToExcel(exportData, "colleges_data.xlsx")
+                              document.getElementById("export-dropdown").classList.add("hidden")
+                            }}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Export as Excel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -858,7 +837,13 @@ const UCDashboard = ({ currentUser, onLogout }) => {
       </div>
 
       {/* Footer */}
-      <Footer sidebarItems={sidebarItems} onNavigate={handleNavigate} onLogout={onLogout} />
+      <Footer
+        sidebarItems={sidebarItems}
+        onNavigate={handleNavigate}
+        onLogout={onLogout}
+        isLoggedIn={true}
+        dashboardType="UC"
+      />
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
@@ -877,6 +862,13 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                 <strong>{selectedItem?.type === "module" ? "Team ID:" : "Applicant:"} </strong>
                 {selectedItem?.type === "module" ? selectedItem?.teamId : selectedItem?.applicant}
               </p>
+              {selectedItem?.type === "module" && (
+                <p className="text-sm">
+                  <strong>Completed Modules: </strong>
+                  {selectedItem.completedModules?.join(", ")} ({selectedItem.completedModules?.length}/
+                  {selectedItem.modulesTotal})
+                </p>
+              )}
               {selectedItem?.details && (
                 <p className="text-sm">
                   <strong>Details: </strong>

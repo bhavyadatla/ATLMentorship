@@ -2,43 +2,104 @@
 
 import { ArrowUp } from "lucide-react"
 
-const Footer = ({ sidebarItems = [], onNavigate, onLogout, isLoggedIn = false, currentUser = null }) => {
+const Footer = ({
+  sidebarItems = [],
+  onNavigate,
+  onLogout,
+  isLoggedIn = false,
+  currentUser = null,
+  dashboardType = null,
+}) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  // Partner logos - using placeholder images for now
+  // Partner logos - using actual organization logos for now
   const partnerLogos = [
-    { name: "Partner 1", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Partner 2", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Partner 3", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Partner 4", logo: "/placeholder.svg?height=80&width=80" },
-    { name: "Partner 5", logo: "/placeholder.svg?height=80&width=80" },
+    {
+      name: "Andhra Pradesh Government",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0012.jpg-VpnuL7wBI1kxmUSrKsrdTgD2KdX3pY.jpeg",
+    },
+    {
+      name: "APSCHE",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0014.jpg-4KQcIJdsSnIdJVkjcHyQerE9Kirrzw.jpeg",
+    },
+    {
+      name: "BCDE",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0009.jpg-kKRio9ue9yg7lw0LXBnb5wHNxvBQw3.jpeg",
+    },
+    {
+      name: "UNICEF",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0013.jpg-GrXxB7j5Kvkq3AzRB8k7HXPDt615R8.jpeg",
+    },
+    {
+      name: "Vigyan Ashram",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0011.jpg-or0jWa6hQ2JWSKHaNJnfTFsnFuvwIn.jpeg",
+    },
+    {
+      name: "VVIT University",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0010.jpg-je1ND7LS93Q8fP6yHuHOMIYwfH2DUm.jpeg",
+    },
   ]
 
-  const dashboardFeatures = [
-    { id: "dashboard", label: "Dashboard Overview" },
-    { id: "profile", label: "My Profile" },
-    { id: "sessions", label: "Session Management" },
-    { id: "projects", label: "Project Tracker" },
-    { id: "resources", label: "Resource Library" },
-    { id: "analytics", label: "Analytics & Reports" },
-  ]
+  const getDashboardNavigation = (type) => {
+    switch (type) {
+      case "UC":
+        return [
+          { id: "home", label: "Home" },
+          { id: "profile", label: "Profile" },
+          { id: "colleges-list", label: "Colleges List" },
+          { id: "module-completion", label: "Module Completion" },
+          { id: "approvals", label: "Approvals" },
+          { id: "export-data", label: "Export Data" },
+        ]
+      case "DSO":
+        return [
+          { id: "home", label: "Home" },
+          { id: "profile", label: "Profile" },
+          { id: "school-mapping", label: "School Mapping" },
+        ]
+      case "CC":
+        return [
+          { id: "home", label: "Home" },
+          { id: "profile", label: "Profile" },
+          { id: "team", label: "Team" },
+          { id: "export-data", label: "Export Data" },
+        ]
+      case "SO":
+        return [
+          { id: "home", label: "Home" },
+          { id: "profile", label: "Profile" },
+          { id: "announcements", label: "Announcements" },
+          { id: "approvals", label: "Approvals" },
+          { id: "export-data", label: "Export Data" },
+          { id: "module-completion", label: "Module Completion" },
+        ]
+      default:
+        return [
+          { id: "dashboard", label: "Dashboard Overview" },
+          { id: "profile", label: "My Profile" },
+          { id: "sessions", label: "Session Management" },
+          { id: "projects", label: "Project Tracker" },
+          { id: "resources", label: "Resource Library" },
+          { id: "analytics", label: "Analytics & Reports" },
+        ]
+    }
+  }
 
   if (isLoggedIn) {
     // Footer for logged-in users (dashboard pages)
+    const navigationItems = getDashboardNavigation(dashboardType)
+
     return (
       <footer className="mt-auto">
         {/* Main Footer Section for Logged-in Users */}
         <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 text-gray-800 border-t border-gray-200">
           <div className="max-w-6xl mx-auto px-6 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Left Section - User Info */}
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <img src="/atl-logo.png" alt="ATL Logo" className="w-6 h-6 rounded-full" />
-                  </div>
                   <h3 className="text-lg font-bold text-gray-800">ATL Dashboard</h3>
                 </div>
                 {currentUser && (
@@ -49,74 +110,27 @@ const Footer = ({ sidebarItems = [], onNavigate, onLogout, isLoggedIn = false, c
                 )}
               </div>
 
+              {/* Center Section - Dashboard Navigation */}
               <div className="space-y-3">
-                <h4 className="text-md font-semibold text-gray-800">Dashboard Features</h4>
+                <h4 className="text-md font-semibold text-gray-800">Navigation</h4>
                 <ul className="space-y-2">
-                  {dashboardFeatures.slice(0, 4).map((feature) => (
-                    <li key={feature.id}>
+                  {navigationItems.map((item) => (
+                    <li key={item.id}>
                       <button
-                        onClick={() => onNavigate && onNavigate(feature.id)}
+                        onClick={() => onNavigate && onNavigate(item.id)}
                         className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                       >
-                        {feature.label}
+                        {item.label}
                       </button>
                     </li>
                   ))}
                 </ul>
               </div>
 
+              {/* Right Section - Actions */}
               <div className="space-y-3">
-                <h4 className="text-md font-semibold text-gray-800">More Features</h4>
+                <h4 className="text-md font-semibold text-gray-800">Actions</h4>
                 <ul className="space-y-2">
-                  {dashboardFeatures.slice(4).map((feature) => (
-                    <li key={feature.id}>
-                      <button
-                        onClick={() => onNavigate && onNavigate(feature.id)}
-                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                      >
-                        {feature.label}
-                      </button>
-                    </li>
-                  ))}
-                  <li>
-                    <button
-                      onClick={() => onNavigate && onNavigate("mentor-dashboard")}
-                      className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                    >
-                      Mentor Dashboard
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => onNavigate && onNavigate("mentee-dashboard")}
-                      className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                    >
-                      Mentee Dashboard
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Support & Actions */}
-              <div className="space-y-3">
-                <h4 className="text-md font-semibold text-gray-800">Support & Actions</h4>
-                <ul className="space-y-2">
-                  <li>
-                    <button
-                      onClick={() => onNavigate && onNavigate("support")}
-                      className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                    >
-                      Help Center
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => onNavigate && onNavigate("about")}
-                      className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                    >
-                      About ATL
-                    </button>
-                  </li>
                   <li>
                     <button
                       onClick={onLogout}
@@ -158,11 +172,11 @@ const Footer = ({ sidebarItems = [], onNavigate, onLogout, isLoggedIn = false, c
       {/* Partner Logos Section */}
       <div className="bg-gray-50 py-8">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex justify-center items-center space-x-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 justify-items-center">
             {partnerLogos.map((partner, index) => (
               <div
                 key={index}
-                className="w-20 h-20 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center overflow-hidden shadow-sm"
+                className="w-20 h-20 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center overflow-hidden shadow-sm hover:shadow-md transition-shadow"
               >
                 <img src={partner.logo || "/placeholder.svg"} alt={partner.name} className="w-16 h-16 object-contain" />
               </div>
