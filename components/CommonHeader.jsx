@@ -47,9 +47,7 @@ const CommonHeader = ({
 
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-              <img src="/images/atl-logo.png" alt="ATL Logo" className="w-6 h-6 rounded-full" />
-            </div>
+            <img src="/images/atl-logo.png" alt="ATL Logo" className="w-8 h-8 rounded-full object-cover" />
             <span className="text-xl font-bold text-gray-900">ATL Mentorship</span>
           </div>
         </div>

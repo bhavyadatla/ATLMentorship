@@ -1,7 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { Search, Download, X, Edit, Users, CheckCircle, Clock, Rocket, User, Home, LogOut } from "lucide-react"
+import {
+  Search,
+  Download,
+  X,
+  Edit,
+  Users,
+  CheckCircle,
+  Clock,
+  Rocket,
+  User,
+  Home,
+  LogOut,
+  FileText,
+} from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
 import Footer from "./Footer"
 
@@ -81,6 +94,40 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     phoneNo: "",
     lastVisit: "",
   })
+
+  // Suggestions data for CC dashboard
+  const [suggestionsData, setSuggestionsData] = useState([
+    {
+      id: 1,
+      suggestionId: "SUG-CC-001",
+      concernType: "ATL Program",
+      concern: "Need more hands-on training materials for students working on innovation projects.",
+    },
+    {
+      id: 2,
+      suggestionId: "SUG-CC-002",
+      concernType: "App Related",
+      concern: "Team management interface could be more intuitive with better filtering options.",
+    },
+    {
+      id: 3,
+      suggestionId: "SUG-CC-003",
+      concernType: "Default",
+      concern: "Improve communication channels between college coordinators and university coordinators.",
+    },
+    {
+      id: 4,
+      suggestionId: "SUG-CC-004",
+      concernType: "ATL Program",
+      concern: "Add project milestone tracking features for better student progress monitoring.",
+    },
+    {
+      id: 5,
+      suggestionId: "SUG-CC-005",
+      concernType: "App Related",
+      concern: "Export functionality should include team performance analytics and reports.",
+    },
+  ])
 
   // Calculate stats
   const totalTeams = teamMembers.length
@@ -188,11 +235,23 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     }
   }
 
+  const getConcernTypeColor = (concernType) => {
+    switch (concernType) {
+      case "App Related":
+        return "bg-blue-100 text-blue-800"
+      case "ATL Program":
+        return "bg-green-100 text-green-800"
+      default:
+        return "bg-gray-100 text-gray-800"
+    }
+  }
+
   const sidebarItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "profile", label: "Profile", icon: User },
     { id: "team", label: "Teams List", icon: Users },
     { id: "export-data", label: "Export Data", icon: Download },
+    { id: "suggestions", label: "Suggestions", icon: FileText },
     { id: "logout", label: "Logout", icon: LogOut },
   ]
 
@@ -415,14 +474,14 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                     <div className="flex space-x-4">
                       <button
                         type="submit"
-                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                       >
                         Save Changes
                       </button>
                       <button
                         type="button"
                         onClick={() => setIsEditingProfile(false)}
-                        className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+                        className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
                       >
                         Cancel
                       </button>
@@ -514,6 +573,9 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Team Member
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -527,6 +589,13 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.phoneNo}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.lastVisit}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.name}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(member.status)}`}
+                            >
+                              {member.status}
+                            </span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -639,6 +708,49 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "suggestions" && (
+            <div className="space-y-6">
+              <h1 className="text-3xl font-bold text-gray-900">Suggestions</h1>
+
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Suggestion ID
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Concern Type
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Concern
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {suggestionsData.map((suggestion) => (
+                        <tr key={suggestion.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {suggestion.suggestionId}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span
+                              className={`px-2 py-1 text-xs font-semibold rounded-full ${getConcernTypeColor(suggestion.concernType)}`}
+                            >
+                              {suggestion.concernType}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-500 max-w-md">{suggestion.concern}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

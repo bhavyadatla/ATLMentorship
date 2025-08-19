@@ -39,8 +39,8 @@ const AboutPage = ({ onNavigate }) => {
               {/* Image Placeholder */}
               <div className="w-full h-80 bg-gray-300 rounded-lg flex items-center justify-center">
                 <img
-                  src="/images/about-description.png"
-                  alt="About ATL Description"
+                  src="/images/about-description.jpg"
+                  alt="ATL Mentorship - Students and mentors collaborating in technical lab"
                   className="w-full h-full object-cover rounded-lg"
                 />
               </div>
@@ -56,45 +56,44 @@ const AboutPage = ({ onNavigate }) => {
               {/* Image Placeholder */}
               <div className="w-full h-80 bg-gray-300 rounded-lg flex items-center justify-center">
                 <img
-                  src="/images/about-vision.png"
-                  alt="Vision & Mission"
+                  src="/images/about-vision.jpg"
+                  alt="Vision & Mission - ATL community gathering"
                   className="w-full h-full object-cover rounded-lg"
                 />
               </div>
 
               {/* Content */}
               <div className="space-y-6">
-                <p className="text-gray-700 leading-relaxed">
-                  Our vision is to foster a nationwide culture of innovation and entrepreneurship, encouraging a
-                  problem-solving mindset in young people, and establishing a strong entrepreneurial ecosystem
-                  throughout all educational levels and sectors. We aim for a future where theoretical knowledge and
-                  practical application are seamlessly integrated, empowering students to become innovators and
-                  problem-solvers.
-                </p>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Vision</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    To foster a nationwide culture of innovation and entrepreneurship, empowering students to become
+                    problem-solvers by seamlessly integrating theoretical knowledge with practical application.
+                  </p>
+                </div>
 
                 <div>
-                  <p className="text-gray-700 font-semibold mb-4">Our mission is to:</p>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Our Mission</h3>
                   <ul className="space-y-3 text-gray-700">
                     <li className="flex items-start">
                       <span className="font-semibold mr-2">•</span>
                       <div>
-                        <span className="font-semibold">Promote Innovation at the School Level</span> by establishing
-                        Atal Tinkering Labs (ATLs) in schools, equipping students with 21st-century tools like IoT, 3D
-                        printing, and robotics.
+                        <span className="font-semibold">Promote Innovation</span> through Atal Tinkering Labs equipped
+                        with 21st-century tools like IoT, 3D printing, and robotics.
                       </div>
                     </li>
                     <li className="flex items-start">
                       <span className="font-semibold mr-2">•</span>
                       <div>
-                        <span className="font-semibold">Strengthen the Innovation Ecosystem</span> through
-                        collaborations between higher education institutions (especially engineering colleges) and ATLs.
+                        <span className="font-semibold">Strengthen Ecosystem</span> via collaborations between
+                        engineering colleges and ATLs.
                       </div>
                     </li>
                     <li className="flex items-start">
                       <span className="font-semibold mr-2">•</span>
                       <div>
-                        <span className="font-semibold">Bridge Theory and Practice</span> by providing specialized
-                        mentorship to school students from engineering colleges.
+                        <span className="font-semibold">Bridge Theory & Practice</span> by providing specialized
+                        mentorship to school students.
                       </div>
                     </li>
                   </ul>

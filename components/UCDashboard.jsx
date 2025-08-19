@@ -181,7 +181,41 @@ const UCDashboard = ({ currentUser, onLogout }) => {
     { id: "module-completion", label: "Module Completion", icon: FileText },
     { id: "approvals", label: "Approvals", icon: Users },
     { id: "export-data", label: "Export Data", icon: Download },
+    { id: "suggestions", label: "Suggestions", icon: FileText },
   ]
+
+  const [suggestionsData, setSuggestionsData] = useState([
+    {
+      id: 1,
+      suggestionId: "SUG001",
+      concernType: "App Related",
+      concern: "The dashboard loading time is too slow, especially when accessing college data.",
+    },
+    {
+      id: 2,
+      suggestionId: "SUG002",
+      concernType: "ATL Program",
+      concern: "Need more training modules for advanced robotics and AI concepts.",
+    },
+    {
+      id: 3,
+      suggestionId: "SUG003",
+      concernType: "Default",
+      concern: "Improve the user interface for better accessibility and mobile responsiveness.",
+    },
+    {
+      id: 4,
+      suggestionId: "SUG004",
+      concernType: "App Related",
+      concern: "Export functionality should include more file formats like PDF.",
+    },
+    {
+      id: 5,
+      suggestionId: "SUG005",
+      concernType: "ATL Program",
+      concern: "Add more collaboration tools for students to work on projects together.",
+    },
+  ])
 
   const handleProfileSave = () => {
     setIsEditing(false)
@@ -773,6 +807,56 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )
+
+      case "suggestions":
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-6">Suggestions</h2>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Suggestion ID
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Concern Type
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Concern
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {suggestionsData.map((suggestion) => (
+                      <tr key={suggestion.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {suggestion.suggestionId}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              suggestion.concernType === "App Related"
+                                ? "bg-blue-100 text-blue-800"
+                                : suggestion.concernType === "ATL Program"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {suggestion.concernType}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500 max-w-md">{suggestion.concern}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

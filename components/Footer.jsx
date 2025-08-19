@@ -52,12 +52,14 @@ const Footer = ({
           { id: "module-completion", label: "Module Completion" },
           { id: "approvals", label: "Approvals" },
           { id: "export-data", label: "Export Data" },
+          { id: "suggestions", label: "Suggestions" },
         ]
       case "DSO":
         return [
           { id: "home", label: "Home" },
           { id: "profile", label: "Profile" },
           { id: "school-mapping", label: "School Mapping" },
+          { id: "suggestions", label: "Suggestions" },
         ]
       case "CC":
         return [
@@ -65,6 +67,7 @@ const Footer = ({
           { id: "profile", label: "Profile" },
           { id: "team", label: "Team" },
           { id: "export-data", label: "Export Data" },
+          { id: "suggestions", label: "Suggestions" },
         ]
       case "SO":
         return [
@@ -74,6 +77,7 @@ const Footer = ({
           { id: "approvals", label: "Approvals" },
           { id: "export-data", label: "Export Data" },
           { id: "module-completion", label: "Module Completion" },
+          { id: "suggestions", label: "Suggestions" },
         ]
       default:
         return [
@@ -83,6 +87,7 @@ const Footer = ({
           { id: "projects", label: "Project Tracker" },
           { id: "resources", label: "Resource Library" },
           { id: "analytics", label: "Analytics & Reports" },
+          { id: "suggestions", label: "Suggestions" },
         ]
     }
   }

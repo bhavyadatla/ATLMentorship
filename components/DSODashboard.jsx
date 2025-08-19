@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit, Download } from "lucide-react"
+import { User, Home, MapPin, BarChart3, School, ChevronDown, LogOut, Edit, Download, FileText } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 import Footer from "./Footer"
 
@@ -138,10 +138,44 @@ const DSODashboard = ({ currentUser, onLogout }) => {
     },
   ])
 
+  const [suggestionsData, setSuggestionsData] = useState([
+    {
+      id: 1,
+      suggestionId: "SUG-DSO-001",
+      concernType: "App Related",
+      concern: "District-level reporting needs more granular data visualization for better decision making.",
+    },
+    {
+      id: 2,
+      suggestionId: "SUG-DSO-002",
+      concernType: "ATL Program",
+      concern: "Need better coordination tools for managing multiple schools across different mandals.",
+    },
+    {
+      id: 3,
+      suggestionId: "SUG-DSO-003",
+      concernType: "Default",
+      concern: "Improve the school mapping interface for easier navigation and data entry.",
+    },
+    {
+      id: 4,
+      suggestionId: "SUG-DSO-004",
+      concernType: "ATL Program",
+      concern: "Add functionality to track teacher training progress across all schools in the district.",
+    },
+    {
+      id: 5,
+      suggestionId: "SUG-DSO-005",
+      concernType: "App Related",
+      concern: "Export functionality should include district-wise summary reports.",
+    },
+  ])
+
   const sidebarItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "profile", label: "Profile", icon: User },
     { id: "schools", label: "Schools Mapping", icon: MapPin },
+    { id: "suggestions", label: "Suggestions", icon: FileText },
   ]
 
   const handleProfileSave = () => {
@@ -558,6 +592,56 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                             {school.active}
                           </span>
                         </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )
+
+      case "suggestions":
+        return (
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-6">Suggestions</h2>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Suggestion ID
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Concern Type
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Concern
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {suggestionsData.map((suggestion) => (
+                      <tr key={suggestion.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {suggestion.suggestionId}
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                              suggestion.concernType === "App Related"
+                                ? "bg-blue-100 text-blue-800"
+                                : suggestion.concernType === "ATL Program"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {suggestion.concernType}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500 max-w-md">{suggestion.concern}</td>
                       </tr>
                     ))}
                   </tbody>
