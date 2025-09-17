@@ -14,9 +14,12 @@ import {
   Home,
   LogOut,
   FileText,
+  Award,
+  Trash2,
+  ChevronDown,
 } from "lucide-react"
 import CommonHeader from "@/components/CommonHeader"
-import Footer from "./Footer"
+import Footer from "@/components/Footer"
 
 const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
@@ -26,6 +29,9 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
   const [showApproveDialog, setShowApproveDialog] = useState(false)
   const [selectedMember, setSelectedMember] = useState(null)
   const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false)
+  const [memberToRemove, setMemberToRemove] = useState(null)
+  const [showExportDropdown, setShowExportDropdown] = useState(false)
 
   // Sample team data
   const [teamMembers, setTeamMembers] = useState([
@@ -95,7 +101,6 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     lastVisit: "",
   })
 
-  // Suggestions data for CC dashboard
   const [suggestionsData, setSuggestionsData] = useState([
     {
       id: 1,
@@ -126,6 +131,26 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
       suggestionId: "SUG-CC-005",
       concernType: "App Related",
       concern: "Export functionality should include team performance analytics and reports.",
+    },
+  ])
+
+  // Achievements data for CC dashboard
+  const [achievementsData, setAchievementsData] = useState([
+    {
+      id: 1,
+      title: "Clg appreciation cert",
+      description: "College Appreciation Certificate for outstanding contribution to ATL program",
+      fileName: "college_appreciation_certificate.pdf",
+      dateIssued: "2024-01-15",
+      type: "Certificate",
+    },
+    {
+      id: 2,
+      title: "Clg Coordination appreciation cert",
+      description: "College Coordination Appreciation Certificate for excellent mentorship coordination",
+      fileName: "college_coordination_certificate.pdf",
+      dateIssued: "2024-01-10",
+      type: "Certificate",
     },
   ])
 
@@ -161,6 +186,24 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
   const handleApproveCancel = () => {
     setShowApproveDialog(false)
     setSelectedMember(null)
+  }
+
+  const handleRemoveClick = (member) => {
+    setMemberToRemove(member)
+    setShowRemoveDialog(true)
+  }
+
+  const handleRemoveConfirm = () => {
+    if (memberToRemove) {
+      setTeamMembers((prev) => prev.filter((member) => member.id !== memberToRemove.id))
+    }
+    setShowRemoveDialog(false)
+    setMemberToRemove(null)
+  }
+
+  const handleRemoveCancel = () => {
+    setShowRemoveDialog(false)
+    setMemberToRemove(null)
   }
 
   const handleAddMember = (e) => {
@@ -203,6 +246,7 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     a.download = "team_data.csv"
     a.click()
     window.URL.revokeObjectURL(url)
+    setShowExportDropdown(false)
   }
 
   const exportToExcel = () => {
@@ -222,6 +266,7 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     a.download = "team_data.xlsx"
     a.click()
     window.URL.revokeObjectURL(url)
+    setShowExportDropdown(false)
   }
 
   const getStatusColor = (status) => {
@@ -250,7 +295,7 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     { id: "home", label: "Home", icon: Home },
     { id: "profile", label: "Profile", icon: User },
     { id: "team", label: "Teams List", icon: Users },
-    { id: "export-data", label: "Export Data", icon: Download },
+    { id: "achievements", label: "Achievements", icon: Award },
     { id: "suggestions", label: "Suggestions", icon: FileText },
     { id: "logout", label: "Logout", icon: LogOut },
   ]
@@ -269,6 +314,14 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
     } else {
       setActiveTab(itemId)
     }
+  }
+
+  const downloadCertificate = (achievement) => {
+    // Simulate certificate download
+    const link = document.createElement("a")
+    link.href = `/certificates/${achievement.fileName}`
+    link.download = achievement.fileName
+    link.click()
   }
 
   return (
@@ -533,6 +586,44 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-gray-900">Teams List</h1>
+                <div className="relative">
+                  <div className="flex">
+                    <button
+                      onClick={exportToCSV}
+                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-l-lg hover:bg-blue-700 transition-colors"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Export</span>
+                    </button>
+                    <button
+                      onClick={() => setShowExportDropdown(!showExportDropdown)}
+                      className="px-2 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 transition-colors border-l border-blue-500"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  {showExportDropdown && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                      <div className="py-1">
+                        <button
+                          onClick={exportToCSV}
+                          className="flex items-center space-x-2 w-full px-4 py-2 text-left text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>Export CSV</span>
+                        </button>
+                        <button
+                          onClick={exportToExcel}
+                          className="flex items-center space-x-2 w-full px-4 py-2 text-left text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>Export Excel</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Search */}
@@ -576,6 +667,9 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Status
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -596,6 +690,16 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                               {member.status}
                             </span>
                           </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button
+                              onClick={() => handleRemoveClick(member)}
+                              className="flex items-center space-x-1 px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                              title="Remove Team Member"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span>Remove</span>
+                            </button>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -605,109 +709,56 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
             </div>
           )}
 
-          {activeTab === "export-data" && (
+          {activeTab === "achievements" && (
             <div className="space-y-6">
-              <h1 className="text-3xl font-bold text-gray-900">Export Data</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Achievements</h1>
 
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">Team Data</h2>
-                  <div className="relative inline-block">
-                    <div className="flex">
-                      <button
-                        onClick={exportToCSV}
-                        className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-l-lg hover:bg-green-700 transition-colors"
+              <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">Certificates & Awards</h2>
+                  <div className="space-y-4">
+                    {achievementsData.map((achievement) => (
+                      <div
+                        key={achievement.id}
+                        className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
                       >
-                        <Download className="w-4 h-4" />
-                        <span>Export</span>
-                      </button>
-                      <div className="relative">
-                        <button
-                          onClick={() => {
-                            const dropdown = document.getElementById("cc-export-dropdown")
-                            dropdown.classList.toggle("hidden")
-                          }}
-                          className="px-3 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 border-l border-green-500 flex items-center"
-                        >
-                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </button>
-                        <div
-                          id="cc-export-dropdown"
-                          className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
-                        >
-                          <div className="py-1">
-                            <button
-                              onClick={() => {
-                                exportToCSV()
-                                document.getElementById("cc-export-dropdown").classList.add("hidden")
-                              }}
-                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
-                            >
-                              CSV
-                            </button>
-                            <button
-                              onClick={() => {
-                                exportToExcel()
-                                document.getElementById("cc-export-dropdown").classList.add("hidden")
-                              }}
-                              className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
-                            >
-                              Excel
-                            </button>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3">
+                              <Award className="w-6 h-6 text-yellow-500" />
+                              <div>
+                                <h3 className="text-lg font-medium text-gray-900">{achievement.title}</h3>
+                                <p className="text-sm text-gray-600 mt-1">{achievement.description}</p>
+                                <div className="flex items-center space-x-4 mt-2">
+                                  <span className="text-xs text-gray-500">
+                                    Issued: {new Date(achievement.dateIssued).toLocaleDateString()}
+                                  </span>
+                                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    {achievement.type}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                           </div>
+                          <button
+                            onClick={() => downloadCertificate(achievement)}
+                            className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            <Download className="w-4 h-4" />
+                            <span>Download</span>
+                          </button>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Team No
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Name
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Roll No
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Phone No
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Last Visit
-                          </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Status
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {teamMembers.map((member) => (
-                          <tr key={member.id}>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {member.teamNo}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.name}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.rollNo}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.phoneNo}</td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{member.lastVisit}</td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <span
-                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(member.status)}`}
-                              >
-                                {member.status}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  {achievementsData.length === 0 && (
+                    <div className="text-center py-12">
+                      <Award className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No Achievements Yet</h3>
+                      <p className="text-gray-600">Your certificates and awards will appear here once earned.</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -717,7 +768,7 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
             <div className="space-y-6">
               <h1 className="text-3xl font-bold text-gray-900">Suggestions</h1>
 
-              <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-gray-50">
@@ -741,7 +792,7 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span
-                              className={`px-2 py-1 text-xs font-semibold rounded-full ${getConcernTypeColor(suggestion.concernType)}`}
+                              className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getConcernTypeColor(suggestion.concernType)}`}
                             >
                               {suggestion.concernType}
                             </span>
@@ -758,148 +809,9 @@ const CCDashboard = ({ onNavigate, currentUser, onLogout }) => {
         </div>
       </div>
 
-      {/* Add Member Modal */}
-      {showAddMemberModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Add New Member</h2>
-              <button onClick={() => setShowAddMemberModal(false)} className="text-gray-400 hover:text-gray-600">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
+      <Footer dashboardType="cc" onNavigate={(tabId) => setActiveTab(tabId)} isLoggedIn={true} />
 
-            <form onSubmit={handleAddMember} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Team No</label>
-                <input
-                  type="text"
-                  value={newMember.teamNo}
-                  onChange={(e) => setNewMember({ ...newMember, teamNo: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  value={newMember.name}
-                  onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Roll No</label>
-                <input
-                  type="text"
-                  value={newMember.rollNo}
-                  onChange={(e) => setNewMember({ ...newMember, rollNo: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone No</label>
-                <input
-                  type="tel"
-                  value={newMember.phoneNo}
-                  onChange={(e) => setNewMember({ ...newMember, phoneNo: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Last Visit</label>
-                <input
-                  type="date"
-                  value={newMember.lastVisit}
-                  onChange={(e) => setNewMember({ ...newMember, lastVisit: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-
-              <div className="flex space-x-4">
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Add Member
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAddMemberModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Approve Dialog */}
-      {showApproveDialog && selectedMember && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-900">Approve Member</h2>
-              <button onClick={handleApproveCancel} className="text-gray-400 hover:text-gray-600">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-
-            <div className="space-y-3 mb-6">
-              <p className="text-gray-700">Are you sure you want to approve this member?</p>
-              <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                <p>
-                  <span className="font-medium">Team No:</span> {selectedMember.teamNo}
-                </p>
-                <p>
-                  <span className="font-medium">Name:</span> {selectedMember.name}
-                </p>
-                <p>
-                  <span className="font-medium">Roll No:</span> {selectedMember.rollNo}
-                </p>
-                <p>
-                  <span className="font-medium">Phone:</span> {selectedMember.phoneNo}
-                </p>
-                <p>
-                  <span className="font-medium">Last Visit:</span> {selectedMember.lastVisit}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex space-x-4">
-              <button
-                onClick={handleApproveCancel}
-                className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleApproveConfirm}
-                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                Approve
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Footer */}
-      <Footer
-        sidebarItems={sidebarItems}
-        onNavigate={onNavigate}
-        onLogout={handleLogout}
-        isLoggedIn={true}
-        currentUser={currentUser}
-        dashboardType="CC"
-      />
+      {showExportDropdown && <div className="fixed inset-0 z-0" onClick={() => setShowExportDropdown(false)} />}
     </div>
   )
 }

@@ -127,25 +127,6 @@ const LoginPage = ({ onLogin, onNavigate }) => {
                 ))}
               </div>
             </div>
-
-            {/* Instructions */}
-            <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-              <h4 className="font-semibold text-gray-900 mb-2">Role Descriptions:</h4>
-              <ul className="text-sm text-gray-600 space-y-2">
-                <li>
-                  <strong>UC (University Coordinator):</strong> Manages colleges, approvals, and module completion
-                </li>
-                <li>
-                  <strong>DSO (District Science Officer):</strong> Oversees district-level activities and schools
-                </li>
-                <li>
-                  <strong>CC (College Coordinator):</strong> Manages college-specific mentorship programs
-                </li>
-                <li>
-                  <strong>SO (State Officer):</strong> Handles state-level ATL activities and school oversight
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </main>

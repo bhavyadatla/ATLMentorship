@@ -107,21 +107,6 @@ const RegisterPage = ({ onNavigate }) => {
     }))
   }
 
-  const getRoleDisplayName = () => {
-    switch (selectedRole) {
-      case "so":
-        return "State Officer"
-      case "uc":
-        return "BCDE University Coordinator"
-      case "cc":
-        return "BCDE College Coordinator"
-      case "dso":
-        return "District Science Officer"
-      default:
-        return ""
-    }
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -175,10 +160,8 @@ const RegisterPage = ({ onNavigate }) => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           {/* Header Section */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-                <img src="/images/atl-logo.png" alt="ATL Logo" className="w-6 h-6 rounded-full" />
-              </div>
+            <div className="flex items-center justify-center mx-auto mb-4">
+              <img src="/images/atl-logo.png" alt="ATL Logo" className="w-16 h-16 object-contain" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Your Account</h1>
             <p className="text-gray-600">Join the ATL Mentorship Platform</p>
@@ -330,7 +313,7 @@ const RegisterPage = ({ onNavigate }) => {
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
                     <div className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-700">
-                      {getRoleDisplayName()}
+                      {selectedRoleData?.title}
                     </div>
                   </div>
 

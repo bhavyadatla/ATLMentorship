@@ -167,7 +167,7 @@ export default function SupportPage({ onNavigate }) {
         </div>
       </div>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   )
 }

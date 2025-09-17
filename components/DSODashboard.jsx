@@ -299,21 +299,20 @@ const DSODashboard = ({ currentUser, onLogout }) => {
       case "home":
         const stats = getAllSchoolsStats()
         return (
-          <div className="p-6">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">District Science Officer Dashboard</h1>
-              <p className="text-gray-600">
+          <div className="p-4 sm:p-6">
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">District Science Officer Dashboard</h1>
+              <p className="text-sm sm:text-base text-gray-600">
                 Welcome back, {editedProfile.name} from {editedProfile.district} District.
               </p>
             </div>
 
-            {/* Mandal Selector */}
-            <div className="mb-6">
-              <div className="relative inline-block">
+            <div className="mb-4 sm:mb-6">
+              <div className="relative inline-block w-full sm:w-auto">
                 <select
                   value={selectedMandal}
                   onChange={(e) => setSelectedMandal(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full sm:w-auto appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   {mandals.map((mandal) => (
                     <option key={mandal} value={mandal}>
@@ -325,42 +324,40 @@ const DSODashboard = ({ currentUser, onLogout }) => {
               </div>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Active Schools</h3>
-                <p className="text-4xl font-bold text-green-600 mb-1">{stats.activeSchools}</p>
-                <p className="text-sm text-gray-600">Fully operational</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+              <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Active Schools</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-green-600 mb-1">{stats.activeSchools}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Fully operational</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Total Students</h3>
-                <p className="text-4xl font-bold text-blue-600 mb-1">{stats.totalStudents}</p>
-                <p className="text-sm text-gray-600">Across all schools</p>
+              <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Total Students</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">{stats.totalStudents}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Across all schools</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Total Teachers</h3>
-                <p className="text-4xl font-bold text-purple-600 mb-1">{stats.totalTeachers}</p>
-                <p className="text-sm text-gray-600">Teaching staff</p>
+              <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Total Teachers</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-purple-600 mb-1">{stats.totalTeachers}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Teaching staff</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Girls Enrollment</h3>
-                <p className="text-4xl font-bold text-pink-600 mb-1">{stats.girlsEnrollment}</p>
-                <p className="text-sm text-gray-600">Female students</p>
+              <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+                <h3 className="font-semibold mb-2 text-gray-700 text-sm sm:text-base">Girls Enrollment</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-pink-600 mb-1">{stats.girlsEnrollment}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Female students</p>
               </div>
             </div>
 
-            {/* Analytics Graph Section - Large Placeholder */}
-            <div className="bg-white rounded-lg shadow p-6 mb-8">
-              <h3 className="text-lg font-semibold mb-4 flex items-center">
-                <BarChart3 className="h-5 w-5 mr-2 text-blue-600" />
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-6 sm:mb-8">
+              <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-blue-600" />
                 ATL Performance Analytics
               </h3>
-              <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+              <div className="h-48 sm:h-64 bg-gray-50 rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <h4 className="text-4xl font-bold text-gray-700 mb-2">Graph</h4>
+                  <h4 className="text-2xl sm:text-4xl font-bold text-gray-700 mb-2">Graph</h4>
                 </div>
               </div>
             </div>
@@ -369,35 +366,38 @@ const DSODashboard = ({ currentUser, onLogout }) => {
 
       case "profile":
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Profile</h2>
+          <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Profile</h2>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center mb-8">
-                <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mr-6">
-                  <User className="h-10 w-10 text-purple-600" />
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 sm:mb-8">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-purple-100 rounded-full flex items-center justify-center mb-4 sm:mb-0 sm:mr-6">
+                  <User className="h-8 w-8 sm:h-10 sm:w-10 text-purple-600" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Profile Information</h3>
-                  <p className="text-gray-600">View and edit your profile details</p>
+                <div className="flex-1">
+                  <h3 className="text-lg sm:text-xl font-semibold">Profile Information</h3>
+                  <p className="text-sm sm:text-base text-gray-600">View and edit your profile details</p>
                 </div>
                 {!isEditing && (
-                  <button onClick={() => setIsEditing(true)} className="ml-auto p-2 text-gray-600 hover:text-gray-900">
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="mt-4 sm:mt-0 p-2 text-gray-600 hover:text-gray-900 self-end sm:self-auto"
+                  >
                     <Edit className="w-5 h-5" />
                   </button>
                 )}
               </div>
 
               {isEditing ? (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
                       <input
                         type="text"
                         value={editedProfile.name}
                         onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -406,7 +406,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                         type="text"
                         value={editedProfile.role}
                         onChange={(e) => setEditedProfile({ ...editedProfile, role: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -415,7 +415,7 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                         type="text"
                         value={editedProfile.phone}
                         onChange={(e) => setEditedProfile({ ...editedProfile, phone: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                     <div>
@@ -424,29 +424,29 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                         type="email"
                         value={editedProfile.email}
                         onChange={(e) => setEditedProfile({ ...editedProfile, email: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
-                    <div>
+                    <div className="sm:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 mb-2">District</label>
                       <input
                         type="text"
                         value={editedProfile.district}
                         onChange={(e) => setEditedProfile({ ...editedProfile, district: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                     </div>
                   </div>
-                  <div className="flex space-x-4 pt-4">
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 pt-4">
                     <button
                       onClick={handleProfileSave}
-                      className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                      className="w-full sm:w-auto px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm sm:text-base"
                     >
                       Save Changes
                     </button>
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+                      className="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 text-sm sm:text-base"
                     >
                       Cancel
                     </button>
@@ -454,26 +454,26 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Name</span>
-                      <span className="text-gray-900">{editedProfile.name}</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="flex flex-col sm:flex-row sm:justify-between py-3 border-b border-gray-100">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base mb-1 sm:mb-0">Name</span>
+                      <span className="text-gray-900 text-sm sm:text-base">{editedProfile.name}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Role</span>
-                      <span className="text-gray-900">{editedProfile.role}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between py-3 border-b border-gray-100">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base mb-1 sm:mb-0">Role</span>
+                      <span className="text-gray-900 text-sm sm:text-base">{editedProfile.role}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Ph.no</span>
-                      <span className="text-gray-900">{editedProfile.phone}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between py-3 border-b border-gray-100">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base mb-1 sm:mb-0">Ph.no</span>
+                      <span className="text-gray-900 text-sm sm:text-base">{editedProfile.phone}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">Email</span>
-                      <span className="text-gray-900">{editedProfile.email}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between py-3 border-b border-gray-100">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base mb-1 sm:mb-0">Email</span>
+                      <span className="text-gray-900 text-sm sm:text-base break-all">{editedProfile.email}</span>
                     </div>
-                    <div className="flex justify-between py-3 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">District</span>
-                      <span className="text-gray-900">{editedProfile.district}</span>
+                    <div className="flex flex-col sm:flex-row sm:justify-between py-3 border-b border-gray-100 sm:col-span-2">
+                      <span className="font-medium text-gray-700 text-sm sm:text-base mb-1 sm:mb-0">District</span>
+                      <span className="text-gray-900 text-sm sm:text-base">{editedProfile.district}</span>
                     </div>
                   </div>
                 </div>
@@ -484,13 +484,13 @@ const DSODashboard = ({ currentUser, onLogout }) => {
 
       case "schools":
         return (
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Schools Mapping</h2>
+          <div className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-4 sm:space-y-0">
+              <h2 className="text-xl sm:text-2xl font-bold">Schools Mapping</h2>
               <div className="relative">
                 <button
                   onClick={() => setShowExportDropdown(!showExportDropdown)}
-                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full sm:w-auto flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export
@@ -516,45 +516,45 @@ const DSODashboard = ({ currentUser, onLogout }) => {
             </div>
 
             <div className="mb-4">
-              <div className="text-sm text-gray-600">Showing {getFilteredSchools().length} schools</div>
+              <div className="text-xs sm:text-sm text-gray-600">Showing {getFilteredSchools().length} schools</div>
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[800px]">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         S.NO
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         UDISE Code
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         School Name
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Type
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Mandal
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Village
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Girls
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Boys
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Total
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Teachers
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Active
                       </th>
                     </tr>
@@ -562,28 +562,44 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {getFilteredSchools().map((school, index) => (
                       <tr key={school.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                          {index + 1}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                           {school.udiseCode}
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                              <School className="h-4 w-4 text-blue-600" />
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                              <School className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600" />
                             </div>
-                            <span className="text-sm font-medium text-gray-900">{school.name}</span>
+                            <span className="text-xs sm:text-sm font-medium text-gray-900 max-w-[150px] sm:max-w-none truncate">
+                              {school.name}
+                            </span>
                           </div>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.type}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.mandal}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.village}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.girls}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.boys}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.type}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.mandal}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.village}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.girls}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.boys}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                           {school.total}
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{school.teachers}</td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {school.teachers}
+                        </td>
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                               school.active === "Yes" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
@@ -603,21 +619,21 @@ const DSODashboard = ({ currentUser, onLogout }) => {
 
       case "suggestions":
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Suggestions</h2>
+          <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Suggestions</h2>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[600px]">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Suggestion ID
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Concern Type
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Concern
                       </th>
                     </tr>
@@ -625,10 +641,10 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {suggestionsData.map((suggestion) => (
                       <tr key={suggestion.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                           {suggestion.suggestionId}
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-4 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                               suggestion.concernType === "App Related"
@@ -641,7 +657,9 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                             {suggestion.concernType}
                           </span>
                         </td>
-                        <td className="px-4 py-4 text-sm text-gray-500 max-w-md">{suggestion.concern}</td>
+                        <td className="px-2 sm:px-4 py-4 text-xs sm:text-sm text-gray-500 max-w-xs sm:max-w-md">
+                          <div className="break-words">{suggestion.concern}</div>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -659,20 +677,19 @@ const DSODashboard = ({ currentUser, onLogout }) => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <div className="flex flex-1">
-        {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
+          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col hidden md:flex`}
         >
           {/* User Profile Section */}
           <div className="p-4 border-b">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <User className="h-6 w-6 text-purple-600" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <User className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
               </div>
               {sidebarOpen && (
                 <div>
-                  <p className="font-medium text-gray-900">{editedProfile.name}</p>
-                  <p className="text-sm text-gray-500">Dist_Sci Officer</p>
+                  <p className="font-medium text-gray-900 text-sm sm:text-base">{editedProfile.name}</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Dist_Sci Officer</p>
                 </div>
               )}
             </div>
@@ -685,13 +702,13 @@ const DSODashboard = ({ currentUser, onLogout }) => {
                 <li key={item.id}>
                   <button
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
+                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-sm sm:text-base ${
                       activeTab === item.id
                         ? "bg-gray-100 text-gray-900 font-medium"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     }`}
                   >
-                    <item.icon className="h-5 w-5 mr-3" />
+                    <item.icon className="h-4 w-4 sm:h-5 sm:w-5 mr-3" />
                     {sidebarOpen && <span>{item.label}</span>}
                   </button>
                 </li>
@@ -700,9 +717,9 @@ const DSODashboard = ({ currentUser, onLogout }) => {
               <li>
                 <button
                   onClick={onLogout}
-                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
+                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4 text-sm sm:text-base"
                 >
-                  <LogOut className="h-5 w-5 mr-3" />
+                  <LogOut className="h-4 w-4 sm:h-5 sm:w-5 mr-3" />
                   {sidebarOpen && <span>Logout</span>}
                 </button>
               </li>

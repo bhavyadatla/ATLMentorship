@@ -9,6 +9,9 @@ const Footer = ({
   isLoggedIn = false,
   currentUser = null,
   dashboardType = null,
+  showSidebar = false,
+  currentPage = null,
+  navItems = [],
 }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -18,7 +21,7 @@ const Footer = ({
   const partnerLogos = [
     {
       name: "Andhra Pradesh Government",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0012.jpg-VpnuL7wBI1kxmUSrKsrdTgD2KdX3pY.jpeg",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Emblem_of_Andhra_Pradesh.svg-bRdpfT5dUQwkxY5yTEpH9WUKMjdX5K.png",
     },
     {
       name: "APSCHE",
@@ -30,7 +33,7 @@ const Footer = ({
     },
     {
       name: "UNICEF",
-      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG-20250816-WA0013.jpg-GrXxB7j5Kvkq3AzRB8k7HXPDt615R8.jpeg",
+      logo: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/unicef-bg-no-IvCTOFHWItYeUhxrMzoADSr1ZgIkia.png",
     },
     {
       name: "Vigyan Ashram",
@@ -48,7 +51,7 @@ const Footer = ({
         return [
           { id: "home", label: "Home" },
           { id: "profile", label: "Profile" },
-          { id: "colleges-list", label: "Colleges List" },
+          { id: "colleges", label: "Colleges List" },
           { id: "module-completion", label: "Module Completion" },
           { id: "approvals", label: "Approvals" },
           { id: "export-data", label: "Export Data" },
@@ -58,15 +61,15 @@ const Footer = ({
         return [
           { id: "home", label: "Home" },
           { id: "profile", label: "Profile" },
-          { id: "school-mapping", label: "School Mapping" },
+          { id: "schools", label: "School Mapping" },
           { id: "suggestions", label: "Suggestions" },
         ]
-      case "CC":
+      case "cc":
         return [
           { id: "home", label: "Home" },
           { id: "profile", label: "Profile" },
-          { id: "team", label: "Team" },
-          { id: "export-data", label: "Export Data" },
+          { id: "team", label: "Teams List" },
+          { id: "achievements", label: "Achievements" },
           { id: "suggestions", label: "Suggestions" },
         ]
       case "SO":
@@ -105,7 +108,7 @@ const Footer = ({
               {/* Left Section - User Info */}
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <h3 className="text-lg font-bold text-gray-800">ATL Dashboard</h3>
+                  <h3 className="text-lg font-bold text-gray-800">ATL Mentorship</h3>
                 </div>
                 {currentUser && (
                   <div className="text-sm text-gray-600">
@@ -122,7 +125,10 @@ const Footer = ({
                   {navigationItems.map((item) => (
                     <li key={item.id}>
                       <button
-                        onClick={() => onNavigate && onNavigate(item.id)}
+                        onClick={() => {
+                          scrollToTop()
+                          onNavigate && onNavigate(item.id)
+                        }}
                         className="text-sm text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                       >
                         {item.label}
@@ -174,6 +180,23 @@ const Footer = ({
   // Footer for public pages (before login)
   return (
     <footer className="mt-auto">
+      {/* Navigation - Only show if not on login/register pages and not in dashboard */}
+      {!showSidebar && currentPage !== "login" && currentPage !== "register" && (
+        <nav className="flex items-center space-x-8">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id)}
+              className={`font-medium transition-colors ${
+                currentPage === item.id ? "text-gray-900 font-bold" : "text-gray-700 hover:text-gray-900"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      )}
+
       {/* Partner Logos Section */}
       <div className="bg-gray-50 py-12">
         <div className="max-w-6xl mx-auto px-6">
@@ -210,9 +233,6 @@ const Footer = ({
                 ATL mentorship is used for fostering innovation and entrepreneurship culture across educational
                 institutions through structured mentorship programs and collaborative learning.
               </p>
-              <div className="pt-4">
-                <span className="text-gray-500 font-medium">Section 1</span>
-              </div>
             </div>
 
             {/* Center Section - Navigation */}
@@ -221,7 +241,10 @@ const Footer = ({
               <ul className="space-y-3">
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("home")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("landing")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     Home
@@ -229,15 +252,10 @@ const Footer = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("public-dashboard")}
-                    className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
-                  >
-                    Dashboard
-                  </button>
-                </li>
-                <li>
-                  <button
-                    onClick={() => onNavigate && onNavigate("about")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("about")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     About ATL
@@ -245,7 +263,10 @@ const Footer = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("support")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("support")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     Support
@@ -253,7 +274,10 @@ const Footer = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("login")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("login")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer font-medium"
                   >
                     Login
@@ -268,7 +292,10 @@ const Footer = ({
               <ul className="space-y-3">
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("about")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("about")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     About ATL
@@ -276,7 +303,10 @@ const Footer = ({
                 </li>
                 <li>
                   <button
-                    onClick={() => onNavigate && onNavigate("support")}
+                    onClick={() => {
+                      scrollToTop()
+                      onNavigate && onNavigate("support")
+                    }}
                     className="text-gray-600 hover:text-blue-600 transition-colors cursor-pointer"
                   >
                     FAQ's

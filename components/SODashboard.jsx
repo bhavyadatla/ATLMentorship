@@ -13,6 +13,7 @@ const SODashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
+  const [selectedUniversity, setSelectedUniversity] = useState("")
 
   const [editedProfile, setEditedProfile] = useState({
     name: "Dr. Venkata Rao",
@@ -23,38 +24,72 @@ const SODashboard = ({ currentUser, onLogout }) => {
     experience: "18 years",
   })
 
-  const [suggestionsData, setSuggestionsData] = useState([
+  const universitiesData = [
     {
       id: 1,
-      suggestionId: "SUG-SO-001",
-      concernType: "ATL Program",
-      concern: "Need better coordination between universities and colleges for ATL program implementation.",
+      name: "Andhra University",
+      district: "Visakhapatnam",
+      college: "AU College of Engineering",
+      active: "Yes",
+      colleges: [
+        { name: "AU College of Engineering", active: true },
+        { name: "AU College of Arts & Science", active: true },
+        { name: "AU College of Pharmacy", active: false },
+        { name: "AU College of Law", active: true },
+      ],
     },
     {
       id: 2,
-      suggestionId: "SUG-SO-002",
-      concernType: "App Related",
-      concern: "State-level dashboard needs more detailed analytics and reporting features.",
+      name: "JNTU Kakinada",
+      district: "East Godavari",
+      college: "JNTU College of Engineering",
+      active: "Yes",
+      colleges: [
+        { name: "JNTU College of Engineering", active: true },
+        { name: "JNTU College of Fine Arts", active: true },
+        { name: "JNTU College of Physical Education", active: false },
+      ],
     },
     {
       id: 3,
-      suggestionId: "SUG-SO-003",
-      concernType: "Default",
-      concern: "Improve communication channels between state officers and district coordinators.",
+      name: "Sri Venkateswara University",
+      district: "Chittoor",
+      college: "SV College of Engineering",
+      active: "No",
+      colleges: [
+        { name: "SV College of Engineering", active: false },
+        { name: "SV College of Commerce", active: false },
+        { name: "SV College of Oriental Languages", active: true },
+      ],
     },
     {
       id: 4,
-      suggestionId: "SUG-SO-004",
-      concernType: "ATL Program",
-      concern: "More training programs needed for college coordinators on innovation methodologies.",
+      name: "Acharya Nagarjuna University",
+      district: "Guntur",
+      college: "ANU College of Engineering",
+      active: "Yes",
+      colleges: [
+        { name: "ANU College of Engineering", active: true },
+        { name: "ANU College of Sciences", active: true },
+        { name: "ANU College of Commerce", active: true },
+        { name: "ANU College of Education", active: false },
+        { name: "ANU College of Management", active: true },
+      ],
     },
     {
       id: 5,
-      suggestionId: "SUG-SO-005",
-      concernType: "App Related",
-      concern: "Add bulk approval functionality for faster processing of multiple requests.",
+      name: "Osmania University",
+      district: "Hyderabad",
+      college: "OU College of Engineering",
+      active: "Yes",
+      colleges: [
+        { name: "OU College of Engineering", active: true },
+        { name: "OU College of Technology", active: true },
+        { name: "OU College of Arts", active: false },
+        { name: "OU College of Social Sciences", active: true },
+      ],
     },
-  ])
+  ]
 
   const sidebarItems = [
     { id: "home", label: "Home", icon: User },
@@ -86,12 +121,135 @@ const SODashboard = ({ currentUser, onLogout }) => {
               </p>
             </div>
 
-            {/* Simple welcome message only */}
-            <div className="bg-white rounded-lg shadow p-8 text-center">
-              <h3 className="text-2xl font-semibold mb-4 text-gray-800">Welcome to your State Officer Dashboard!</h3>
-              <p className="text-gray-600 text-lg">
-                Use the sidebar navigation to manage announcements, approvals, data exports, and module completion.
-              </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">Welcome to your State Officer Dashboard!</h3>
+                <p className="text-gray-600 mb-4">
+                  Use the sidebar navigation to manage announcements, approvals, data exports, and module completion.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-xl font-semibold mb-4 text-gray-800">Universities Overview</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="university-select" className="block text-sm font-medium text-gray-700 mb-2">
+                      Select University
+                    </label>
+                    <select
+                      id="university-select"
+                      value={selectedUniversity}
+                      onChange={(e) => setSelectedUniversity(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                      <option value="">Choose a university...</option>
+                      {universitiesData.map((university) => (
+                        <option key={university.id} value={university.id}>
+                          {university.name} - {university.district}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {selectedUniversity && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                      {(() => {
+                        const university = universitiesData.find((u) => u.id === Number.parseInt(selectedUniversity))
+                        return university ? (
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <h4 className="font-semibold text-gray-900">{university.name}</h4>
+                              <p className="text-sm text-gray-600">
+                                <strong>District:</strong> {university.district}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                <strong>Status:</strong>
+                                <span
+                                  className={`ml-2 px-2 py-1 text-xs font-semibold rounded-full ${
+                                    university.active === "Yes"
+                                      ? "bg-green-100 text-green-800"
+                                      : "bg-red-100 text-red-800"
+                                  }`}
+                                >
+                                  {university.active}
+                                </span>
+                              </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mt-4">
+                              <div className="bg-blue-50 rounded-lg p-3">
+                                <h5 className="text-sm font-semibold text-blue-900">Total Colleges</h5>
+                                <p className="text-xl font-bold text-blue-600">{university.colleges.length}</p>
+                              </div>
+                              <div className="bg-green-50 rounded-lg p-3">
+                                <h5 className="text-sm font-semibold text-green-900">Active Colleges</h5>
+                                <p className="text-xl font-bold text-green-600">
+                                  {university.colleges.filter((college) => college.active).length}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="mt-4">
+                              <h5 className="text-sm font-semibold text-gray-700 mb-2">Colleges List:</h5>
+                              <div className="space-y-1">
+                                {university.colleges.map((college, index) => (
+                                  <div key={index} className="flex justify-between items-center text-sm">
+                                    <span className="text-gray-600">{college.name}</span>
+                                    <span
+                                      className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                        college.active ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                      }`}
+                                    >
+                                      {college.active ? "Active" : "Inactive"}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        ) : null
+                      })()}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h4 className="text-lg font-semibold text-blue-900">
+                  {selectedUniversity ? "Total Colleges" : "Total Universities"}
+                </h4>
+                <p className="text-2xl font-bold text-blue-600">
+                  {selectedUniversity
+                    ? universitiesData.find((u) => u.id === Number.parseInt(selectedUniversity))?.colleges.length || 0
+                    : universitiesData.length}
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-4">
+                <h4 className="text-lg font-semibold text-green-900">
+                  {selectedUniversity ? "Active Colleges" : "Active Universities"}
+                </h4>
+                <p className="text-2xl font-bold text-green-600">
+                  {selectedUniversity
+                    ? universitiesData
+                        .find((u) => u.id === Number.parseInt(selectedUniversity))
+                        ?.colleges.filter((c) => c.active).length || 0
+                    : universitiesData.filter((u) => u.active === "Yes").length}
+                </p>
+              </div>
+              <div className="bg-red-50 rounded-lg p-4">
+                <h4 className="text-lg font-semibold text-red-900">
+                  {selectedUniversity ? "Inactive Colleges" : "Inactive Universities"}
+                </h4>
+                <p className="text-2xl font-bold text-red-600">
+                  {selectedUniversity
+                    ? universitiesData
+                        .find((u) => u.id === Number.parseInt(selectedUniversity))
+                        ?.colleges.filter((c) => !c.active).length || 0
+                    : universitiesData.filter((u) => u.active === "No").length}
+                </p>
+              </div>
             </div>
           </div>
         )
@@ -278,14 +436,45 @@ const SODashboard = ({ currentUser, onLogout }) => {
     }
   }
 
+  const [suggestionsData, setSuggestionsData] = useState([
+    {
+      id: 1,
+      suggestionId: "SUG-SO-001",
+      concernType: "ATL Program",
+      concern: "Need better coordination between universities for ATL program implementation across the state.",
+    },
+    {
+      id: 2,
+      suggestionId: "SUG-SO-002",
+      concernType: "App Related",
+      concern: "Dashboard should include state-wide analytics and performance metrics for better oversight.",
+    },
+    {
+      id: 3,
+      suggestionId: "SUG-SO-003",
+      concernType: "Default",
+      concern: "Improve communication channels between state officers and district science officers.",
+    },
+    {
+      id: 4,
+      suggestionId: "SUG-SO-004",
+      concernType: "ATL Program",
+      concern: "Add centralized resource sharing platform for all universities in the state.",
+    },
+    {
+      id: 5,
+      suggestionId: "SUG-SO-005",
+      concernType: "App Related",
+      concern: "Export functionality should include comprehensive state-level reports and analytics.",
+    },
+  ])
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <div className="flex flex-1">
-        {/* Sidebar */}
         <div
           className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
         >
-          {/* User Profile Section */}
           <div className="p-4 border-b">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
@@ -300,7 +489,6 @@ const SODashboard = ({ currentUser, onLogout }) => {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 p-4">
             <ul className="space-y-2">
               {sidebarItems.map((item) => (
@@ -318,7 +506,6 @@ const SODashboard = ({ currentUser, onLogout }) => {
                   </button>
                 </li>
               ))}
-              {/* Logout Button */}
               <li>
                 <button
                   onClick={onLogout}
@@ -332,9 +519,7 @@ const SODashboard = ({ currentUser, onLogout }) => {
           </nav>
         </div>
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
           <CommonHeader
             sidebarOpen={sidebarOpen}
             setSidebarOpen={setSidebarOpen}
@@ -343,12 +528,10 @@ const SODashboard = ({ currentUser, onLogout }) => {
             showSidebar={true}
           />
 
-          {/* Main Content Area */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
         </div>
       </div>
 
-      {/* Footer */}
       <Footer
         sidebarItems={sidebarItems}
         onNavigate={handleNavigate}

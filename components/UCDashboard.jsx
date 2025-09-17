@@ -1,14 +1,15 @@
 "use client"
 
 import { useState } from "react"
-import { User, Home, Users, FileText, Download, School, LogOut, Edit } from "lucide-react"
+import { User, Home, Users, FileText, Download, School, LogOut, Edit, ChevronDown, Menu, X } from "lucide-react"
 import CommonHeader from "./CommonHeader"
 import Footer from "./Footer"
 import EditApprovalModal from "./EditApprovalModal"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 const UCDashboard = ({ currentUser, onLogout }) => {
   const [activeTab, setActiveTab] = useState("home")
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(false) // Default to false for mobile-first approach
   const [isEditing, setIsEditing] = useState(false)
   const [showConfirmDialog, setShowConfirmDialog] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
@@ -280,60 +281,62 @@ const UCDashboard = ({ currentUser, onLogout }) => {
     switch (activeTab) {
       case "home":
         return (
-          <div className="p-6">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">University Coordinator Dashboard</h1>
-              <p className="text-gray-600">
+          <div className="p-3 sm:p-6">
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+                University Coordinator Dashboard
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600">
                 Welcome back, {editedProfile.name} from {editedProfile.university}.
               </p>
             </div>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Total Colleges</h3>
-                <p className="text-4xl font-bold text-blue-600 mb-1">{collegesData.length}</p>
-                <p className="text-sm text-gray-600">Under coordination</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+              <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+                <h3 className="font-semibold mb-1 sm:mb-2 text-gray-700 text-xs sm:text-sm">Total Colleges</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-blue-600 mb-1">{collegesData.length}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Under coordination</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Active Teams</h3>
-                <p className="text-4xl font-bold text-green-600 mb-1">
+              <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+                <h3 className="font-semibold mb-1 sm:mb-2 text-gray-700 text-xs sm:text-sm">Active Teams</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-green-600 mb-1">
                   {collegesData.reduce((sum, college) => sum + college.numberOfTeams, 0)}
                 </p>
-                <p className="text-sm text-gray-600">Across all colleges</p>
+                <p className="text-xs sm:text-sm text-gray-600">Across all colleges</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Pending Approvals</h3>
-                <p className="text-4xl font-bold text-orange-600 mb-1">{pendingApprovals.length}</p>
-                <p className="text-sm text-gray-600">Awaiting review</p>
+              <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+                <h3 className="font-semibold mb-1 sm:mb-2 text-gray-700 text-xs sm:text-sm">Pending Approvals</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-orange-600 mb-1">{pendingApprovals.length}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Awaiting review</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="font-semibold mb-2 text-gray-700">Completed Modules</h3>
-                <p className="text-4xl font-bold text-purple-600 mb-1">
+              <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+                <h3 className="font-semibold mb-1 sm:mb-2 text-gray-700 text-xs sm:text-sm">Completed Modules</h3>
+                <p className="text-2xl sm:text-4xl font-bold text-purple-600 mb-1">
                   {moduleCompletionData.filter((item) => item.status === "approved").length}
                 </p>
-                <p className="text-sm text-gray-600">Approved completions</p>
+                <p className="text-xs sm:text-sm text-gray-600">Approved completions</p>
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-              <div className="space-y-4">
-                <div className="flex items-center p-3 bg-blue-50 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                  <span className="text-sm">New module completion request from GITAM University</span>
+            <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+              <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Recent Activity</h3>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex items-center p-2 sm:p-3 bg-blue-50 rounded-lg">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm">New module completion request from GITAM University</span>
                 </div>
-                <div className="flex items-center p-3 bg-green-50 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                  <span className="text-sm">Certificate approved for Andhra University College</span>
+                <div className="flex items-center p-2 sm:p-3 bg-green-50 rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm">Certificate approved for Andhra University College</span>
                 </div>
-                <div className="flex items-center p-3 bg-orange-50 rounded-lg">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                  <span className="text-sm">Resource request pending from Vignan's Institute</span>
+                <div className="flex items-center p-2 sm:p-3 bg-orange-50 rounded-lg">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full mr-2 sm:mr-3 flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm">Resource request pending from Vignan's Institute</span>
                 </div>
               </div>
             </div>
@@ -342,21 +345,24 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
       case "profile":
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Profile</h2>
+          <div className="p-3 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Profile</h2>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center mb-8">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mr-6">
-                  <User className="h-10 w-10 text-blue-600" />
+            <div className="bg-white rounded-lg shadow p-3 sm:p-6">
+              <div className="flex items-center mb-6 sm:mb-8">
+                <div className="w-16 sm:w-20 h-16 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mr-4 sm:mr-6 flex-shrink-0">
+                  <User className="h-8 sm:h-10 w-8 sm:w-10 text-blue-600" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold">Profile Information</h3>
-                  <p className="text-gray-600">View and edit your profile details</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg sm:text-xl font-semibold">Profile Information</h3>
+                  <p className="text-sm sm:text-base text-gray-600">View and edit your profile details</p>
                 </div>
                 {!isEditing && (
-                  <button onClick={() => setIsEditing(true)} className="ml-auto p-2 text-gray-600 hover:text-gray-900">
-                    <Edit className="w-5 h-5" />
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="p-2 text-gray-600 hover:text-gray-900 flex-shrink-0"
+                  >
+                    <Edit className="w-4 sm:w-5 h-4 sm:h-5" />
                   </button>
                 )}
               </div>
@@ -457,33 +463,33 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
       case "colleges":
         return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-6">Colleges List</h2>
+          <div className="p-3 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Colleges List</h2>
 
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[800px]">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         S.No
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         College
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         District
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Mandal
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Village
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Coordinator
                       </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Number of Teams
                       </th>
                     </tr>
@@ -491,20 +497,32 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {collegesData.map((college) => (
                       <tr key={college.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{college.sno}</td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                          {college.sno}
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                           <div className="flex items-center">
-                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                              <School className="h-4 w-4 text-blue-600" />
+                            <div className="w-6 sm:w-8 h-6 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0">
+                              <School className="h-3 sm:h-4 w-3 sm:w-4 text-blue-600" />
                             </div>
-                            <span className="text-sm font-medium text-gray-900">{college.college}</span>
+                            <span className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                              {college.college}
+                            </span>
                           </div>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.district}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.mandal}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.village}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{college.coordinator}</td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {college.district}
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {college.mandal}
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {college.village}
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500">
+                          {college.coordinator}
+                        </td>
+                        <td className="px-2 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-1 text-xs font-semibold rounded-full ${
                               college.numberOfTeams >= 10
@@ -685,9 +703,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Approved Date
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Approved By
-                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -701,7 +716,6 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.role}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.college}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedDate}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{item.approvedBy}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -721,13 +735,20 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               {/* Colleges Data Export */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4">Colleges Data</h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-6">
                   Export college information including coordinator details, location, and number of teams data.
                 </p>
 
-                <div className="relative inline-block">
-                  <div className="flex">
-                    <button
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm font-medium">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-48">
+                    <DropdownMenuItem
                       onClick={() => {
                         const exportData = collegesData.map((college) => ({
                           "S.No": college.sno,
@@ -740,73 +761,31 @@ const UCDashboard = ({ currentUser, onLogout }) => {
                         }))
                         exportToCSV(exportData, "colleges_data.csv")
                       }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-l-lg hover:bg-green-700 flex items-center"
+                      className="flex items-center px-3 py-2 hover:bg-green-50 hover:text-green-700 cursor-pointer"
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Export
-                    </button>
-
-                    {/* Dropdown button */}
-                    <div className="relative">
-                      <button
-                        onClick={() => {
-                          const dropdown = document.getElementById("export-dropdown")
-                          dropdown.classList.toggle("hidden")
-                        }}
-                        className="px-3 py-2 bg-green-600 text-white rounded-r-lg hover:bg-green-700 border-l border-green-500 flex items-center"
-                      >
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-
-                      {/* Dropdown menu */}
-                      <div
-                        id="export-dropdown"
-                        className="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200"
-                      >
-                        <div className="py-1">
-                          <button
-                            onClick={() => {
-                              const exportData = collegesData.map((college) => ({
-                                "S.No": college.sno,
-                                College: college.college,
-                                District: college.district,
-                                Mandal: college.mandal,
-                                Village: college.village,
-                                Coordinator: college.coordinator,
-                                "Number of Teams": college.numberOfTeams,
-                              }))
-                              exportToCSV(exportData, "colleges_data.csv")
-                              document.getElementById("export-dropdown").classList.add("hidden")
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-t-lg"
-                          >
-                            CSV
-                          </button>
-                          <button
-                            onClick={() => {
-                              const exportData = collegesData.map((college) => ({
-                                "S.No": college.sno,
-                                College: college.college,
-                                District: college.district,
-                                Mandal: college.mandal,
-                                Village: college.village,
-                                Coordinator: college.coordinator,
-                                "Number of Teams": college.numberOfTeams,
-                              }))
-                              exportToExcel(exportData, "colleges_data.xlsx")
-                              document.getElementById("export-dropdown").classList.add("hidden")
-                            }}
-                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-b-lg"
-                          >
-                            Excel
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                      <Download className="h-4 w-4 mr-2 text-green-600" />
+                      <span className="text-green-600 font-medium">Export CSV</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        const exportData = collegesData.map((college) => ({
+                          "S.No": college.sno,
+                          College: college.college,
+                          District: college.district,
+                          Mandal: college.mandal,
+                          Village: college.village,
+                          Coordinator: college.coordinator,
+                          "Number of Teams": college.numberOfTeams,
+                        }))
+                        exportToExcel(exportData, "colleges_data.xlsx")
+                      }}
+                      className="flex items-center px-3 py-2 hover:bg-blue-50 hover:text-blue-700 cursor-pointer"
+                    >
+                      <Download className="h-4 w-4 mr-2 text-blue-600" />
+                      <span className="text-blue-600 font-medium">Export Excel</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
@@ -869,23 +848,35 @@ const UCDashboard = ({ currentUser, onLogout }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative">
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+
         {/* Sidebar */}
         <div
-          className={`${sidebarOpen ? "w-64" : "w-16"} bg-white shadow-lg transition-all duration-300 flex flex-col`}
+          className={`${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } fixed lg:relative lg:translate-x-0 z-50 w-64 bg-white shadow-lg transition-transform duration-300 flex flex-col h-full lg:h-auto`}
         >
+          {/* Mobile Close Button */}
+          <div className="lg:hidden flex justify-end p-4">
+            <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-lg hover:bg-gray-100">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
           {/* User Profile Section */}
           <div className="p-4 border-b">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                 <User className="h-6 w-6 text-blue-600" />
               </div>
-              {sidebarOpen && (
-                <div>
-                  <p className="font-medium text-gray-900">{editedProfile.name}</p>
-                  <p className="text-sm text-gray-500">Univ Coordinator</p>
-                </div>
-              )}
+              <div className="min-w-0 flex-1">
+                <p className="font-medium text-gray-900 truncate">{editedProfile.name}</p>
+                <p className="text-sm text-gray-500">Univ Coordinator</p>
+              </div>
             </div>
           </div>
 
@@ -895,15 +886,18 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               {sidebarItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
+                    onClick={() => {
+                      setActiveTab(item.id)
+                      setSidebarOpen(false)
+                    }}
+                    className={`w-full flex items-center px-3 py-3 rounded-lg text-left transition-colors ${
                       activeTab === item.id
                         ? "bg-gray-100 text-gray-900 font-medium"
                         : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     }`}
                   >
-                    <item.icon className="h-5 w-5 mr-3" />
-                    {sidebarOpen && <span>{item.label}</span>}
+                    <item.icon className="h-5 w-5 mr-3 flex-shrink-0" />
+                    <span className="truncate">{item.label}</span>
                   </button>
                 </li>
               ))}
@@ -911,10 +905,10 @@ const UCDashboard = ({ currentUser, onLogout }) => {
               <li>
                 <button
                   onClick={onLogout}
-                  className="w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
+                  className="w-full flex items-center px-3 py-3 rounded-lg text-left transition-colors text-red-600 hover:bg-red-50 hover:text-red-700 mt-4"
                 >
-                  <LogOut className="h-5 w-5 mr-3" />
-                  {sidebarOpen && <span>Logout</span>}
+                  <LogOut className="h-5 w-5 mr-3 flex-shrink-0" />
+                  <span className="truncate">Logout</span>
                 </button>
               </li>
             </ul>
@@ -922,29 +916,42 @@ const UCDashboard = ({ currentUser, onLogout }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <CommonHeader
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            onLogout={onLogout}
-            currentUser={currentUser}
-            showSidebar={true}
-          />
+        <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+          {/* Mobile Header with Menu Button */}
+          <div className="lg:hidden bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-gray-100">
+              <Menu className="h-6 w-6" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900">ATL Mentorship</h1>
+            <div className="w-10"></div>
+          </div>
+
+          {/* Desktop Header */}
+          <div className="hidden lg:block">
+            <CommonHeader
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              onLogout={onLogout}
+              currentUser={currentUser}
+              showSidebar={true}
+            />
+          </div>
 
           {/* Main Content Area */}
           <main className="flex-1 overflow-x-hidden overflow-y-auto">{renderContent()}</main>
         </div>
       </div>
 
-      {/* Footer */}
-      <Footer
-        sidebarItems={sidebarItems}
-        onNavigate={handleNavigate}
-        onLogout={onLogout}
-        isLoggedIn={true}
-        dashboardType="UC"
-      />
+      {/* Footer - Hidden on mobile, visible on desktop */}
+      <div className="hidden lg:block">
+        <Footer
+          sidebarItems={sidebarItems}
+          onNavigate={handleNavigate}
+          onLogout={onLogout}
+          isLoggedIn={true}
+          dashboardType="UC"
+        />
+      </div>
 
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
